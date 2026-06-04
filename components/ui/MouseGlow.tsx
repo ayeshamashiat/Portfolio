@@ -26,7 +26,7 @@ export function MouseGlow({ className }: { className?: string }) {
         className
       )}
       style={{
-        background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(255,255,255,0.03), transparent 40%)`,
+        background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(99, 102, 241, 0.07) 0%, rgba(168, 85, 247, 0.03) 50%, transparent 80%)`,
       }}
     />
   );

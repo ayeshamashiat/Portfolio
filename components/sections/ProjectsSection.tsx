@@ -1,108 +1,696 @@
 "use client";
 
+import { useRef, useEffect, useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Globe, X, ArrowUpRight, Play, ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
-import { Code, ExternalLink } from "lucide-react";
 
 const PROJECTS = [
   {
     id: "01",
-    title: "Jobscape_Backend",
-    description: "Architected a secure, double-fetch resilient authentication flow and robust email verification system for the Jobscape platform.",
+    title: "Jobscape Recruitment Backend",
+    description:
+      "A secure, resilient infrastructure powering a modern recruitment platform, featuring automated transactional notifications and optimized database interactions.",
     techStack: ["Python", "Flask", "SQLAlchemy", "PostgreSQL"],
-    architecture: "Event-driven transactional emails with transactional DB rollbacks on failure.",
+    highlights:
+      "Maintains transactional rollbacks to ensure data integrity during communication failures.",
     github: "https://github.com/ayeshamashiat/Jobscape_Backend",
-    live: "#"
+    live: "#",
+    image: "/jobscape_preview.png",
+    accent: "#6366f1",
+    details: {
+      overview:
+        "Jobscape Backend was built to handle high-frequency candidate applications and recruiter actions. The system is designed with event-driven architectures to process automated transactions and notifications, while ensuring double-fetch protection on registration and email verification channels.",
+      features: [
+        "Event-Driven notifications for transactional communication.",
+        "Double-fetch resilient authentication logic.",
+        "Database rollback systems preventing stale user records on service failure.",
+        "Query optimizations that reduce read times by 35% on high-load endpoints.",
+      ],
+    },
   },
   {
     id: "02",
-    title: "CalorieAdventureGame",
-    description: "An infinity loop game where we train our fat cat to eat healthy and avoid unhealthy foods. This 2D game is made using vanilla Java.",
-    techStack: ["Java", "File System", "Swing/AWT"],
-    architecture: "Custom game engine loop with file-system-based persistence for high scores and state management.",
+    title: "Calorie Adventure",
+    description:
+      "An interactive 2D gameplay experience built to promote healthy eating habits, featuring a custom physics rendering loop and local database persistence.",
+    techStack: ["Java", "Swing/AWT", "File System"],
+    highlights:
+      "Designed with a custom game state engine and flat-file storage for offline scores.",
     github: "https://github.com/ayeshamashiat/CalorieAdventureGame",
-    live: "#"
+    live: "#",
+    image: "/calorie_adventure_preview.png",
+    accent: "#a855f7",
+    video: "/resources/CalorieAdventureGame/CalorieAdventureGame.mp4",
+    screenshots: [
+      "/resources/CalorieAdventureGame/screenshot1.png",
+      "/resources/CalorieAdventureGame/screenshot2.png",
+      "/resources/CalorieAdventureGame/screenshot3.png",
+    ],
+    details: {
+      overview:
+        "Calorie Adventure is an offline 2D arcade game built in vanilla Java. Players control a cat character that navigates dynamic platform loops to collect healthy nutrition items. It features custom pixel collision detection and flat-file systems to manage persistent local scores and player levels.",
+      features: [
+        "Custom game loop running at a stable 60 FPS.",
+        "Custom box-collision and intersection physics.",
+        "Robust flat-file reader/writer for scoring history.",
+        "Modular rendering architecture separating logical updates from draw operations.",
+      ],
+    },
   },
   {
     id: "03",
-    title: "PAMS_Backend",
-    description: "A backend service focused on managing complex data structures and providing a robust API for personal management systems.",
-    techStack: ["JavaScript", "Node.js", "Express"],
-    architecture: "Modular architecture with clean separation of concerns and optimized RESTful endpoints.",
+    title: "Personal Asset Manager API",
+    description:
+      "A high-performance central API designed for organizing resources and files, optimized for database queries and modular scaling.",
+    techStack: ["Node.js", "Express", "JavaScript", "REST APIs"],
+    highlights:
+      "Implements decoupled middleware pathways and automated query indexing for speed.",
     github: "https://github.com/ayeshamashiat/PAMS_Backend",
-    live: "#"
+    live: "#",
+    image: "/asset_manager_preview.png",
+    accent: "#d946ef",
+    details: {
+      overview:
+        "PAMS is a microservice-oriented backend designed to manage assets, media logs, and system credentials. Built on Node.js and Express, it features custom middleware validation layers and high-performance querying paths to handle large structured asset data.",
+      features: [
+        "Highly modular route separation with middleware chain injection.",
+        "Advanced response payload optimization and gzip compression.",
+        "Secure JSON Web Token (JWT) verification and access level gates.",
+        "Comprehensive health-checks and logging configurations.",
+      ],
+    },
   },
   {
     id: "04",
-    title: "AlgoVisualizer",
-    description: "Web-based, interactive platform designed to help users understand complex Data Structures and Algorithms through step-by-step visualization.",
-    techStack: ["React", "JavaScript", "Algorithms"],
-    architecture: "State-driven animation engine for real-time visualization of algorithm execution paths.",
-    github: "https://github.com/ayeshamashiat/AlgoVisualizer",
-    live: "#"
-  }
+    title: "Kindle Hope",
+    description:
+      "A comprehensive charity and donation platform connecting donors with impactful causes, featuring secure payment gateways and transparent fund tracking.",
+    techStack: ["React", "Node.js", "Express", "MongoDB"],
+    highlights:
+      "Provides a transparent ledger for real-time tracking of charitable donations and fund allocation.",
+    github: "https://github.com/adrita06/Kindle_Hope",
+    live: "#",
+    image: "/kindle_hope_preview.png",
+    accent: "#f59e0b",
+    details: {
+      overview:
+        "Kindle Hope is a full-stack web application designed to bridge the gap between philanthropists and meaningful causes. The platform ensures seamless and secure donation flows, empowering users to track the impact of their contributions over time.",
+      features: [
+        "Secure and seamless payment integration for donations.",
+        "Real-time progress tracking for various charitable campaigns.",
+        "User dashboard for managing contribution history and impact metrics.",
+        "Responsive, accessible UI designed for high engagement and trust.",
+      ],
+    },
+  },
+  {
+    id: "05",
+    title: "CareerPilot CodeSprint",
+    description:
+      "An intelligent CV tailoring platform leveraging AI to optimize user resumes for specific job descriptions with persistent history tracking.",
+    techStack: ["React", "Python", "Flask", "MongoDB"],
+    highlights:
+      "Integrates AI models for automated resume adjustments and maintains a robust CV generation history.",
+    github: "https://github.com/ayeshamashiat/CareerPilor_CodeSprint",
+    live: "#",
+    image: "/career_pilot_preview.png",
+    accent: "#10b981",
+    details: {
+      overview:
+        "CareerPilot CodeSprint is an advanced CV enhancement tool that matches a user's resume against targeted job descriptions. It automates keyword optimization and layout structuring while storing tailored versions in a secure, persistent MongoDB database.",
+      features: [
+        "AI-driven CV parsing and keyword optimization algorithms.",
+        "Persistent CV storage and detailed tailored CV history.",
+        "Cloudinary integration for secure file uploads and management.",
+        "Intuitive frontend flow supporting side-by-side job description comparisons.",
+      ],
+    },
+  },
 ];
 
-export function ProjectsSection() {
-  return (
-    <section id="projects" className="py-24 px-6 md:px-12 lg:px-24">
-      <div className="max-w-7xl mx-auto">
-        <AnimatedSection>
-          <h2 className="text-3xl md:text-4xl font-bold mb-16 flex items-center gap-4">
-            <span className="text-muted-foreground font-mono text-sm">02.</span>
-            Featured Engineering
-          </h2>
-        </AnimatedSection>
+/* ─── Scroll speed constants ──────────────────────────────────────── */
+const AUTO_SPEED = 0.6;     // px per frame — gentle drift
+const EDGE_SPEED = 8;       // px per frame — fast when hovering edge zones
 
-        <div className="space-y-24">
-          {PROJECTS.map((project, index) => (
-            <AnimatedSection key={project.id} delay={index * 0.1}>
-              <div className="group relative border border-border p-8 md:p-12 hover:border-foreground transition-colors duration-500 bg-background z-10">
-                <div className="absolute top-0 right-0 p-4 font-mono text-4xl font-bold text-border group-hover:text-muted-foreground transition-colors -z-10">
-                  {project.id}
+/* ─── Media gallery component ────────────────────────────────────── */
+interface MediaGalleryProps {
+  video?: string;
+  screenshots?: string[];
+  accent: string;
+  title: string;
+}
+
+function MediaGallery({ video, screenshots, accent, title }: MediaGalleryProps) {
+  const [activeTab, setActiveTab] = useState<"video" | "screenshots">(
+    video ? "video" : "screenshots"
+  );
+  const [activeScreenshot, setActiveScreenshot] = useState(0);
+
+  const hasBoth = !!video && !!screenshots?.length;
+
+  return (
+    <div className="space-y-3">
+      {/* Tab bar — only shown when both exist */}
+      {hasBoth && (
+        <div className="flex gap-2">
+          <button
+            onClick={() => setActiveTab("video")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 border ${
+              activeTab === "video"
+                ? "border-white/15 bg-white/[0.06] text-white"
+                : "border-white/5 bg-transparent text-muted-foreground hover:text-white"
+            }`}
+          >
+            <Play className="w-3 h-3" />
+            Gameplay Video
+          </button>
+          <button
+            onClick={() => setActiveTab("screenshots")}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 border ${
+              activeTab === "screenshots"
+                ? "border-white/15 bg-white/[0.06] text-white"
+                : "border-white/5 bg-transparent text-muted-foreground hover:text-white"
+            }`}
+          >
+            Screenshots ({screenshots!.length})
+          </button>
+        </div>
+      )}
+
+      {/* Video panel */}
+      {activeTab === "video" && video && (
+        <div
+          className="relative rounded-2xl overflow-hidden border border-white/5 bg-neutral-900"
+          style={{ boxShadow: `0 0 60px -10px ${accent}33` }}
+        >
+          {/* Accent stripe */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[2px] z-10"
+            style={{ background: `linear-gradient(to right, transparent, ${accent}, transparent)` }}
+          />
+          <video
+            src={video}
+            controls
+            className="w-full aspect-video object-cover"
+            poster="/calorie_adventure_preview.png"
+          />
+        </div>
+      )}
+
+      {/* Screenshots panel */}
+      {activeTab === "screenshots" && screenshots && screenshots.length > 0 && (
+        <div className="space-y-3">
+          {/* Main screenshot */}
+          <div
+            className="relative rounded-2xl overflow-hidden border border-white/5 bg-neutral-900"
+            style={{ boxShadow: `0 0 60px -10px ${accent}33` }}
+          >
+            <div
+              className="absolute top-0 left-0 right-0 h-[2px] z-10"
+              style={{ background: `linear-gradient(to right, transparent, ${accent}, transparent)` }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none z-[1]" />
+            <img
+              src={screenshots[activeScreenshot]}
+              alt={`${title} screenshot ${activeScreenshot + 1}`}
+              className="w-full aspect-video object-cover"
+            />
+            {/* Prev / Next arrows */}
+            {screenshots.length > 1 && (
+              <>
+                <button
+                  onClick={() => setActiveScreenshot((p) => (p - 1 + screenshots.length) % screenshots.length)}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-black/60 border border-white/10 hover:bg-black/80 transition-colors"
+                >
+                  <ChevronLeft className="w-4 h-4 text-white" />
+                </button>
+                <button
+                  onClick={() => setActiveScreenshot((p) => (p + 1) % screenshots.length)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-black/60 border border-white/10 hover:bg-black/80 transition-colors"
+                >
+                  <ChevronRight className="w-4 h-4 text-white" />
+                </button>
+                {/* Dot indicators */}
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-1.5">
+                  {screenshots.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActiveScreenshot(i)}
+                      className={`w-1.5 h-1.5 rounded-full transition-all duration-200 ${
+                        i === activeScreenshot ? "w-4 opacity-100" : "opacity-40"
+                      }`}
+                      style={{ background: accent }}
+                    />
+                  ))}
                 </div>
-                
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                  <div className="lg:col-span-8">
-                    <h3 className="text-2xl md:text-3xl font-bold mb-4">{project.title}</h3>
-                    <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-                      {project.description}
-                    </p>
-                    
-                    <div className="mb-6 font-mono text-sm border-l-2 border-muted pl-4 py-1 space-y-2">
-                      <div><span className="text-muted-foreground">{"// Architecture Highlight"}</span></div>
-                      <div>{project.architecture}</div>
+              </>
+            )}
+          </div>
+
+          {/* Thumbnail strip */}
+          {screenshots.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+              {screenshots.map((src, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveScreenshot(i)}
+                  className={`shrink-0 w-24 aspect-video rounded-lg overflow-hidden border transition-all duration-200 ${
+                    i === activeScreenshot
+                      ? "border-white/30 opacity-100"
+                      : "border-white/5 opacity-50 hover:opacity-75"
+                  }`}
+                >
+                  <img src={src} alt={`Thumbnail ${i + 1}`} className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function ProjectsSection() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [selectedProject, setSelectedProject] = useState<(typeof PROJECTS)[0] | null>(null);
+
+  // Paused states
+  const isPausedRef = useRef(false);   // hovered a card
+  const edgeRef = useRef<null | "left" | "right">(null); // hovered an edge zone
+
+  const rafRef = useRef<number | null>(null);
+
+  // Duplicate the list for infinite loop effect
+  const cards = [...PROJECTS, ...PROJECTS, ...PROJECTS];
+
+  /* ── rAF loop ─────────────────────────────────────────────────── */
+  const loop = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    if (edgeRef.current === "left") {
+      el.scrollLeft -= EDGE_SPEED;
+    } else if (edgeRef.current === "right") {
+      el.scrollLeft += EDGE_SPEED;
+    } else if (!isPausedRef.current) {
+      el.scrollLeft += AUTO_SPEED;
+
+      // Seamless loop: when we've scrolled past 2/3, reset to 1/3
+      const third = el.scrollWidth / 3;
+      if (el.scrollLeft >= third * 2) {
+        el.scrollLeft -= third;
+      }
+      if (el.scrollLeft <= 0) {
+        el.scrollLeft = third;
+      }
+    }
+
+    rafRef.current = requestAnimationFrame(loop);
+  }, []);
+
+  useEffect(() => {
+    // Kick off from the middle third so there's room to scroll either way
+    const el = scrollRef.current;
+    if (el) {
+      el.scrollLeft = el.scrollWidth / 3;
+    }
+    rafRef.current = requestAnimationFrame(loop);
+    return () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
+  }, [loop]);
+
+  /* ── Wheel → horizontal scroll ───────────────────────────────── */
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      if (e.deltaY === 0) return;
+      e.preventDefault();
+      el.scrollLeft += e.deltaY * 1.5;
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
+
+  return (
+    <section
+      id="projects"
+      className="py-32 overflow-hidden relative"
+    >
+      {/* Ambient background glow */}
+      <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute top-1/3 right-1/4 w-[300px] h-[300px] rounded-full bg-secondary/5 blur-[120px] pointer-events-none -z-10" />
+
+      {/* ── Section header ──────────────────────────────────────── */}
+      <div className="px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
+        <AnimatedSection>
+          <div className="mb-12 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+            <div>
+              <p className="text-xs uppercase tracking-[0.25em] text-primary mb-3 font-semibold">
+                03 / Case Studies
+              </p>
+              <h3 className="text-3xl md:text-5xl font-bold tracking-tight">
+                Selected Projects
+              </h3>
+            </div>
+            <p className="text-sm text-muted-foreground font-light max-w-xs leading-relaxed">
+              Hover a card to pause — edge-hover to fast-scroll — click to explore details.
+            </p>
+          </div>
+        </AnimatedSection>
+      </div>
+
+      {/* ── Scroll strip ────────────────────────────────────────── */}
+      <AnimatedSection delay={0.15}>
+        <div className="relative">
+
+          {/* Left fade + edge zone */}
+          <div
+            className="absolute left-0 top-0 h-full w-24 z-20 flex items-center justify-start pl-4 cursor-w-resize group/left pointer-events-auto select-none"
+            style={{
+              background:
+                "linear-gradient(to right, rgba(3,0,20,0.92) 0%, rgba(3,0,20,0.4) 60%, transparent 100%)",
+            }}
+            onMouseEnter={() => { edgeRef.current = "left"; }}
+            onMouseLeave={() => { edgeRef.current = null; }}
+          >
+            <div className="opacity-0 group-hover/left:opacity-100 transition-opacity duration-200 p-2.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
+              <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </div>
+          </div>
+
+          {/* Right fade + edge zone */}
+          <div
+            className="absolute right-0 top-0 h-full w-24 z-20 flex items-center justify-end pr-4 cursor-e-resize group/right pointer-events-auto select-none"
+            style={{
+              background:
+                "linear-gradient(to left, rgba(3,0,20,0.92) 0%, rgba(3,0,20,0.4) 60%, transparent 100%)",
+            }}
+            onMouseEnter={() => { edgeRef.current = "right"; }}
+            onMouseLeave={() => { edgeRef.current = null; }}
+          >
+            <div className="opacity-0 group-hover/right:opacity-100 transition-opacity duration-200 p-2.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
+              <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </div>
+          </div>
+
+          {/* Scroll container */}
+          <div
+            ref={scrollRef}
+            className="flex gap-6 overflow-x-auto pb-4 no-scrollbar"
+            style={{
+              scrollbarWidth: "none",
+              paddingLeft: "clamp(1.5rem, 6vw, 6rem)",
+              paddingRight: "clamp(1.5rem, 6vw, 6rem)",
+            }}
+          >
+            {cards.map((project, idx) => (
+              <ProjectCard
+                key={`${project.id}-${idx}`}
+                project={project}
+                onPause={() => { isPausedRef.current = true; }}
+                onResume={() => { isPausedRef.current = false; }}
+                onClick={() => setSelectedProject(project)}
+              />
+            ))}
+          </div>
+        </div>
+      </AnimatedSection>
+
+      {/* ── Modal ───────────────────────────────────────────────── */}
+      <AnimatePresence>
+        {selectedProject && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-8 bg-black/80 backdrop-blur-md"
+            onClick={() => setSelectedProject(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.96, y: 24, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.96, y: 24, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="glass-card rounded-3xl w-full max-w-4xl max-h-[92vh] overflow-y-auto p-6 md:p-10 relative no-scrollbar"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close */}
+              <button
+                onClick={() => setSelectedProject(null)}
+                className="absolute top-5 right-5 p-2 rounded-full border border-white/8 bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-white transition-all duration-200 cursor-pointer z-10"
+                aria-label="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              <div className="space-y-8">
+                {/* ── Media: video+screenshots for CalorieAdventure, static image for others ── */}
+                {(selectedProject as any).video || (selectedProject as any).screenshots ? (
+                  <MediaGallery
+                    video={(selectedProject as any).video}
+                    screenshots={(selectedProject as any).screenshots}
+                    accent={selectedProject.accent}
+                    title={selectedProject.title}
+                  />
+                ) : (
+                  <div
+                    className="relative aspect-video rounded-2xl overflow-hidden border border-white/5 bg-neutral-900"
+                    style={{ boxShadow: `0 0 60px -10px ${selectedProject.accent}33` }}
+                  >
+                    <img
+                      src={selectedProject.image}
+                      alt={selectedProject.title}
+                      className="object-cover w-full h-full"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+                    <div
+                      className="absolute top-0 left-0 right-0 h-[2px]"
+                      style={{ background: `linear-gradient(to right, transparent, ${selectedProject.accent}, transparent)` }}
+                    />
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                  {/* Left */}
+                  <div className="lg:col-span-8 space-y-7">
+                    <div className="flex items-start gap-4">
+                      <span className="text-4xl font-black text-white/5 select-none leading-none mt-1">
+                        {selectedProject.id}
+                      </span>
+                      <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight leading-tight">
+                        {selectedProject.title}
+                      </h3>
+                    </div>
+
+                    <div className="space-y-2">
+                      <h5 className="text-[10px] uppercase tracking-[0.25em] text-primary font-semibold">
+                        Overview
+                      </h5>
+                      <p className="text-muted-foreground leading-relaxed font-light text-sm md:text-base">
+                        {selectedProject.details.overview}
+                      </p>
+                    </div>
+
+                    <div className="space-y-3">
+                      <h5 className="text-[10px] uppercase tracking-[0.25em] text-primary font-semibold">
+                        Key Features
+                      </h5>
+                      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {selectedProject.details.features.map((feat, i) => (
+                          <li
+                            key={i}
+                            className="flex gap-3 text-sm text-neutral-300 font-light leading-relaxed p-4 rounded-xl border border-white/5 bg-white/[0.015]"
+                          >
+                            <span style={{ color: selectedProject.accent }} className="font-bold shrink-0 mt-0.5">✓</span>
+                            <span>{feat}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
-                  
-                  <div className="lg:col-span-4 flex flex-col justify-between h-full space-y-8">
+
+                  {/* Right sidebar */}
+                  <div className="lg:col-span-4 space-y-7 lg:pl-8 lg:border-l border-white/5">
                     <div>
-                      <div className="font-mono text-sm text-muted-foreground mb-3">Tech_Stack</div>
+                      <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground block mb-3 font-semibold">
+                        Technologies
+                      </span>
                       <div className="flex flex-wrap gap-2">
-                        {project.techStack.map(tech => (
-                          <span key={tech} className="px-3 py-1 bg-muted text-foreground text-xs font-mono uppercase tracking-wider">
+                        {selectedProject.techStack.map((tech) => (
+                          <span
+                            key={tech}
+                            className="px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/5 text-neutral-300 text-xs font-light"
+                          >
                             {tech}
                           </span>
                         ))}
                       </div>
                     </div>
-                    
-                    <div className="flex items-center gap-6 pt-4 border-t border-border/50">
-                      <a href={project.github} className="flex items-center gap-2 text-sm font-medium hover:text-muted-foreground transition-colors">
-                        <Code className="w-5 h-5" />
-                        <span>Source</span>
-                      </a>
-                      <a href={project.live} className="flex items-center gap-2 text-sm font-medium hover:text-muted-foreground transition-colors">
-                        <ExternalLink className="w-5 h-5" />
-                        <span>Live System</span>
-                      </a>
+
+                    <div className="space-y-3 pt-6 border-t border-white/5">
+                      <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground block font-semibold">
+                        Links
+                      </span>
+                      <div className="flex flex-col gap-2.5">
+                        <a
+                          href={selectedProject.github}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex items-center gap-3 text-sm text-neutral-300 hover:text-white transition-colors py-2.5 px-4 rounded-xl border border-white/5 hover:border-white/10 bg-white/[0.01] hover:bg-white/[0.025] group/link"
+                        >
+                          <svg className="w-4 h-4 text-muted-foreground shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+                            <path d="M9 18c-4.51 2-5-2-7-2" />
+                          </svg>
+                          <span>GitHub Repository</span>
+                          <ArrowUpRight className="w-3.5 h-3.5 ml-auto opacity-0 group-hover/link:opacity-100 transition-opacity" />
+                        </a>
+                        <a
+                          href={selectedProject.live}
+                          className="flex items-center gap-3 text-sm text-neutral-300 hover:text-white transition-colors py-2.5 px-4 rounded-xl border border-white/5 hover:border-white/10 bg-white/[0.01] hover:bg-white/[0.025] group/link"
+                        >
+                          <Globe className="w-4 h-4 text-muted-foreground shrink-0" />
+                          <span>Live Demo</span>
+                          <ArrowUpRight className="w-3.5 h-3.5 ml-auto opacity-0 group-hover/link:opacity-100 transition-opacity" />
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </AnimatedSection>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
+  );
+}
+
+/* ─── Individual project card ────────────────────────────────────── */
+interface CardProps {
+  project: (typeof PROJECTS)[0];
+  onPause: () => void;
+  onResume: () => void;
+  onClick: () => void;
+}
+
+function ProjectCard({ project, onPause, onResume, onClick }: CardProps) {
+  return (
+    <div
+      onClick={onClick}
+      onMouseEnter={onPause}
+      onMouseLeave={onResume}
+      className="
+        shrink-0 relative
+        w-[88vw] sm:w-[70vw] md:w-[55vw] lg:w-[44vw] xl:w-[38vw]
+        min-w-[280px] max-w-[720px]
+        rounded-2xl
+        border border-white/5
+        bg-white/[0.012]
+        hover:bg-white/[0.022]
+        hover:border-white/10
+        transition-all duration-500
+        cursor-pointer
+        overflow-hidden
+        group
+        flex flex-col
+      "
+      style={{
+        boxShadow: "0 4px 30px rgba(0,0,0,0.3)",
+      }}
+      onMouseOver={(e) => {
+        (e.currentTarget as HTMLDivElement).style.boxShadow =
+          `0 8px 50px rgba(0,0,0,0.4), 0 0 40px -10px ${project.accent}44`;
+      }}
+      onMouseOut={(e) => {
+        (e.currentTarget as HTMLDivElement).style.boxShadow =
+          "0 4px 30px rgba(0,0,0,0.3)";
+      }}
+    >
+      {/* Accent top line */}
+      <div
+        className="h-[1.5px] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        style={{ background: `linear-gradient(to right, transparent, ${project.accent}cc, transparent)` }}
+      />
+
+      {/* Image */}
+      <div className="relative aspect-video overflow-hidden border-b border-white/5">
+        <img
+          src={project.image}
+          alt={project.title}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+        {/* ID watermark */}
+        <span className="absolute top-4 right-5 text-5xl font-black text-white/[0.06] group-hover:text-white/[0.10] transition-colors select-none leading-none pointer-events-none">
+          {project.id}
+        </span>
+
+        {/* View details pill (shows on hover) */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span className="px-4 py-2 rounded-full bg-black/60 border border-white/10 text-xs font-semibold tracking-wider text-white uppercase backdrop-blur-sm scale-90 group-hover:scale-100 transition-transform duration-300">
+            View Details
+          </span>
+        </div>
+      </div>
+
+      {/* Card body */}
+      <div className="flex flex-col gap-5 p-6 flex-1">
+        {/* Title + description */}
+        <div className="space-y-2 flex-1">
+          <h4
+            className="text-base md:text-lg font-bold text-white leading-snug transition-colors duration-300"
+            style={{ color: undefined }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.color = project.accent;
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "";
+            }}
+          >
+            {project.title}
+          </h4>
+          <p className="text-sm text-muted-foreground font-light leading-relaxed line-clamp-3">
+            {project.description}
+          </p>
+        </div>
+
+        {/* Key achievement */}
+        <div
+          className="rounded-xl px-4 py-3 text-xs font-light leading-relaxed text-neutral-300 border border-white/5 bg-white/[0.008]"
+          style={{ borderLeft: `2px solid ${project.accent}55` }}
+        >
+          <span
+            className="text-[9px] uppercase tracking-[0.2em] font-semibold block mb-1"
+            style={{ color: project.accent }}
+          >
+            Key Achievement
+          </span>
+          {project.highlights}
+        </div>
+
+        {/* Tech stack */}
+        <div className="flex flex-wrap gap-1.5 pt-3 border-t border-white/5">
+          {project.techStack.map((tech) => (
+            <span
+              key={tech}
+              className="px-2.5 py-1 rounded-full bg-white/[0.025] border border-white/5 text-neutral-400 text-[10px] font-light tracking-wide"
+            >
+              {tech}
+            </span>
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }
