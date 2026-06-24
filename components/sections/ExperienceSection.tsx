@@ -10,58 +10,28 @@ const TIMELINE = [
     date: "2023 - Present",
     badge: "3rd Year",
     description:
-      "Pursuing a rigorous software engineering curriculum covering systems design, algorithms, machine learning, cloud computing, distributed systems, and software security. Consistently applying coursework to real-world projects.",
+      "Pursuing software engineering with focus on backend systems, databases, and cloud computing. Building real-world applications through coursework and independent projects.",
     highlights: [
-      "Machine Learning & Predictive Systems",
-      "Cloud Computing & AWS Architecture",
-      "Distributed Systems & Backend Engineering",
-      "Software Security (OWASP, Penetration Testing)",
-      "Numerical Methods & Computational Algorithms",
+      "Database Design & SQL Optimization",
+      "REST API Architecture & Backend Systems",
+      "Cloud Computing & AWS",
+      "Data Structures & Algorithms",
       "Software Design Patterns",
+      "System Design & Scalability",
     ],
-  },
-  {
-    type: "project",
-    role: "Full-Stack & Backend Developer",
-    company: "Independent and Academic Projects",
-    date: "2023 - Present",
-    badge: "Academic & Self-Directed",
-    description:
-      "Architecting and shipping end-to-end systems independently — from database schema design and REST API construction to frontend interfaces and deployment. Projects span recruitment platforms, game engines, asset management APIs, and algorithm visualizers.",
-    highlights: [
-      "Flask + SQLAlchemy backend systems with transactional integrity",
-      "Node.js microservice APIs with JWT auth and middleware chains",
-      "Java 2D game engine with custom physics and state management",
-      "Next.js portfolio with animated UI and component architecture",
-    ],
-  },
-  {
-    type: "learning",
-    role: "Systems & Infrastructure Engineering",
-    company: "Self-Directed Curriculum",
-    date: "2024 - Present",
-    badge: "Ongoing",
-    description:
-      "Independently studying advanced backend and infrastructure topics beyond the standard curriculum — building mental models for production-grade systems through hands-on labs and deep-dive technical exploration.",
-    highlights: [
-      "AWS Academy labs: IoT pipelines, VPC architecture, IAM",
-      "Celery + Redis async job queues and distributed task systems",
-      "Nginx load balancing and database read replication",
-      "Docker containerisation and Linux system administration",
-    ],
-  },
+  }
 ];
 
 const BADGE_STYLES: Record<string, string> = {
   education: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
   project:   "bg-purple-500/10 text-purple-400 border-purple-500/20",
-  learning:  "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+  achievement: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
 };
 
 const NODE_COLORS: Record<string, string> = {
   education: "border-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]",
   project:   "border-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.5)]",
-  learning:  "border-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.5)]",
+  achievement: "border-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]",
 };
 
 export function ExperienceSection() {
@@ -69,8 +39,8 @@ export function ExperienceSection() {
     <section id="experience" className="py-32 px-6 md:px-12 lg:px-24">
       <div className="max-w-4xl mx-auto">
         <AnimatedSection>
-          <h2 className="text-xs uppercase tracking-[0.25em] text-primary mb-4 font-semibold">04 / Journey</h2>
-          <h3 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">Education & Growth</h3>
+          <h2 className="text-xs uppercase tracking-[0.25em] text-primary mb-4 font-semibold">04 / Timeline</h2>
+          <h3 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">Education & Experience</h3>
           
         </AnimatedSection>
 

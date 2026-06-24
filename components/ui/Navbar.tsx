@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ArrowUpRight } from "lucide-react";
+import { Menu, X, ArrowUpRight, Lightbulb } from "lucide-react";
+import { useTheme } from "next-themes";
 
 const NAV_ITEMS = [
   { name: "About", href: "#about" },
@@ -16,6 +17,12 @@ const NAV_ITEMS = [
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,30 +55,50 @@ export function Navbar() {
               <a
                 key={item.name}
                 href={item.href}
-                className="text-xs font-medium text-muted-foreground hover:text-white uppercase tracking-widest transition-colors duration-200"
+                className="text-xs font-medium text-muted-foreground hover:text-accent uppercase tracking-widest transition-colors duration-200"
               >
                 {item.name}
               </a>
             ))}
           </nav>
 
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-4">
+            {mounted && (
+              <button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="relative z-10 p-2 text-muted-foreground hover:text-white transition-colors rounded-full border border-white/5 bg-white/5"
+                aria-label="Toggle theme"
+              >
+                <Lightbulb className={`w-4 h-4 ${theme === "light" ? "text-primary" : ""}`} />
+              </button>
+            )}
             <a
               href="#contact"
-              className="inline-flex items-center gap-1 text-xs font-medium uppercase tracking-widest text-white hover:text-primary transition-colors duration-200"
+              className="inline-flex items-center gap-1 text-xs font-medium uppercase tracking-widest text-white hover:text-accent transition-colors duration-200"
             >
               <span>Let's talk</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden relative z-10 p-1 text-muted-foreground hover:text-white transition-colors"
-          >
-            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          {/* Mobile Menu & Theme Button */}
+          <div className="md:hidden flex items-center gap-3 relative z-10">
+            {mounted && (
+              <button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="p-1.5 text-muted-foreground hover:text-white transition-colors rounded-full border border-white/5 bg-white/5"
+                aria-label="Toggle theme"
+              >
+                <Lightbulb className={`w-4 h-4 ${theme === "light" ? "text-primary" : ""}`} />
+              </button>
+            )}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-1 text-muted-foreground hover:text-white transition-colors"
+            >
+              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -91,7 +118,7 @@ export function Navbar() {
                   key={item.name}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className="text-sm font-medium text-muted-foreground hover:text-white uppercase tracking-widest transition-colors"
+                  className="text-sm font-medium text-muted-foreground hover:text-accent uppercase tracking-widest transition-colors"
                 >
                   {item.name}
                 </a>
@@ -100,7 +127,7 @@ export function Navbar() {
                 <a
                   href="#contact"
                   onClick={() => setIsOpen(false)}
-                  className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-widest text-primary hover:text-white transition-colors"
+                  className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-widest text-primary hover:text-accent transition-colors"
                 >
                   <span>Get in Touch</span>
                   <ArrowUpRight className="w-4 h-4" />

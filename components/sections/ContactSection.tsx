@@ -22,7 +22,7 @@ export function ContactSection() {
           <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
             <a 
               href="mailto:hello@example.com" 
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-white text-black font-semibold hover:bg-neutral-200 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-white/10 text-white font-semibold border border-white/20 backdrop-blur-lg hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group shadow-[0_8px_30px_rgba(255,255,255,0.1)]"
             >
               <Mail className="w-4 h-4" />
               <span>Send Message</span>
@@ -34,7 +34,7 @@ export function ContactSection() {
                 href="https://github.com/ayeshamashiat" 
                 target="_blank"
                 rel="noreferrer"
-                className="p-4 rounded-full border border-white/10 hover:border-white/30 text-muted-foreground hover:text-white bg-white/5 backdrop-blur-md transition-all duration-300 hover:scale-[1.02]"
+                className="p-4 rounded-full border border-white/20 text-white bg-white/10 backdrop-blur-lg hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:scale-[1.02] shadow-[0_8px_30px_rgba(255,255,255,0.05)]"
                 aria-label="GitHub Profile"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -46,7 +46,7 @@ export function ContactSection() {
                 href="https://linkedin.com" 
                 target="_blank"
                 rel="noreferrer"
-                className="p-4 rounded-full border border-white/10 hover:border-white/30 text-muted-foreground hover:text-white bg-white/5 backdrop-blur-md transition-all duration-300 hover:scale-[1.02]"
+                className="p-4 rounded-full border border-white/20 text-white bg-white/10 backdrop-blur-lg hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:scale-[1.02] shadow-[0_8px_30px_rgba(255,255,255,0.05)]"
                 aria-label="LinkedIn Profile"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

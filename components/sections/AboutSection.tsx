@@ -6,23 +6,23 @@ import { Server, Database, Brain, CheckCircle } from "lucide-react";
 const VALUES = [
   {
     icon: <Server className="w-5 h-5 text-indigo-400" />,
-    title: "System Architecture",
-    description: "Designing structured backend engines engineered to run efficiently and scale reliably under high traffic."
+    title: "RESTful API Design",
+    description: "Building scalable, secure REST APIs with Node.js/Express.js and FastAPI that handle complex business logic and high-frequency transactions."
   },
   {
     icon: <Database className="w-5 h-5 text-purple-400" />,
-    title: "Data Orchestration",
-    description: "Structuring pipelines, optimizing queries, and securing databases to ensure data flows smoothly and safely."
+    title: "Database Engineering",
+    description: "Designing relational schemas in PostgreSQL/MySQL, implementing efficient ORMs with SQLAlchemy, and optimizing queries for performance."
   },
   {
     icon: <Brain className="w-5 h-5 text-pink-400" />,
-    title: "Intelligent Integration",
-    description: "Seamlessly connecting AI models and predictive data pipelines into existing web and mobile environments."
+    title: "AI-Powered Backends",
+    description: "Integrating LLMs, RAG pipelines, and ML models into production systems; building intelligent CV tailoring and career guidance engines."
   },
   {
     icon: <CheckCircle className="w-5 h-5 text-emerald-400" />,
-    title: "Clarity & Quality",
-    description: "Writing transparent, well-tested code that remains maintainable and clear for engineering teams."
+    title: "Security & DevOps",
+    description: "Implementing JWT authentication, role-based access control, Docker containerization, and AWS deployment for enterprise-grade applications."
   }
 ];
 
@@ -39,13 +39,10 @@ export function AboutSection() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start mb-20">
         <AnimatedSection delay={0.2} className="lg:col-span-6 space-y-6 text-lg text-muted-foreground font-light leading-relaxed">
           <p>
-            I am a software engineer focused on architecting resilient backend systems and creating clear pathways for artificial intelligence integration. I build the unseen logic that makes applications fast, stable, and smart.
+            I'm a full-stack/backend developer and third-year Software Engineering student at IUT. I design and build scalable server systems, databases, and APIs that power web applications. I've worked on recruitment platforms, AI-powered career tools and donation management systems—each requiring secure authentication, efficient data handling, and reliable performance.
           </p>
           <p>
-            My engineering philosophy centers on clarity and structural durability. I believe that backend architecture should perform silently under pressure, while remaining accessible and well-documented for long-term growth.
-          </p>
-          <p>
-            I combine classic software engineering patterns with modern data processing to connect complex databases, machine learning workflows, and customer-facing interfaces seamlessly.
+            I focus on writing clean, maintainable code and deploying systems that actually work in production. Whether it's architecting databases, integrating third-party services, or setting up cloud infrastructure, I approach each project with an emphasis on security, performance, and long-term stability.
           </p>
         </AnimatedSection>
 

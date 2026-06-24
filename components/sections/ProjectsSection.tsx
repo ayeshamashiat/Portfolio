@@ -60,29 +60,6 @@ const PROJECTS = [
   },
   {
     id: "03",
-    title: "Personal Asset Manager API",
-    description:
-      "A high-performance central API designed for organizing resources and files, optimized for database queries and modular scaling.",
-    techStack: ["Node.js", "Express", "JavaScript", "REST APIs"],
-    highlights:
-      "Implements decoupled middleware pathways and automated query indexing for speed.",
-    github: "https://github.com/ayeshamashiat/PAMS_Backend",
-    live: "#",
-    image: "/asset_manager_preview.png",
-    accent: "#d946ef",
-    details: {
-      overview:
-        "PAMS is a microservice-oriented backend designed to manage assets, media logs, and system credentials. Built on Node.js and Express, it features custom middleware validation layers and high-performance querying paths to handle large structured asset data.",
-      features: [
-        "Highly modular route separation with middleware chain injection.",
-        "Advanced response payload optimization and gzip compression.",
-        "Secure JSON Web Token (JWT) verification and access level gates.",
-        "Comprehensive health-checks and logging configurations.",
-      ],
-    },
-  },
-  {
-    id: "04",
     title: "Kindle Hope",
     description:
       "A comprehensive charity and donation platform connecting donors with impactful causes, featuring secure payment gateways and transparent fund tracking.",
@@ -116,6 +93,8 @@ const PROJECTS = [
     live: "#",
     image: "/career_pilot_preview.png",
     accent: "#10b981",
+    video: "https://www.youtube.com/watch?v=_xa97LQYlAM",
+    screenshots: [],
     details: {
       overview:
         "CareerPilot CodeSprint is an advanced CV enhancement tool that matches a user's resume against targeted job descriptions. It automates keyword optimization and layout structuring while storing tailored versions in a secure, persistent MongoDB database.",
@@ -134,6 +113,18 @@ const AUTO_SPEED = 0.6;     // px per frame — gentle drift
 const EDGE_SPEED = 8;       // px per frame — fast when hovering edge zones
 
 /* ─── Media gallery component ────────────────────────────────────── */
+function getYouTubeEmbedUrl(url: string): string | null {
+  const patterns = [
+    /youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/,
+    /youtu\.be\/([a-zA-Z0-9_-]+)/,
+  ];
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return `https://www.youtube.com/embed/${match[1]}`;
+  }
+  return null;
+}
+
 interface MediaGalleryProps {
   video?: string;
   screenshots?: string[];
@@ -189,12 +180,21 @@ function MediaGallery({ video, screenshots, accent, title }: MediaGalleryProps) 
             className="absolute top-0 left-0 right-0 h-[2px] z-10"
             style={{ background: `linear-gradient(to right, transparent, ${accent}, transparent)` }}
           />
-          <video
-            src={video}
-            controls
-            className="w-full aspect-video object-cover"
-            poster="/calorie_adventure_preview.png"
-          />
+          {getYouTubeEmbedUrl(video) ? (
+            <iframe
+              src={getYouTubeEmbedUrl(video)!}
+              className="w-full aspect-video"
+              allowFullScreen
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            />
+          ) : (
+            <video
+              src={video}
+              controls
+              className="w-full aspect-video object-cover"
+              poster="/calorie_adventure_preview.png"
+            />
+          )}
         </div>
       )}
 
@@ -221,13 +221,13 @@ function MediaGallery({ video, screenshots, accent, title }: MediaGalleryProps) 
               <>
                 <button
                   onClick={() => setActiveScreenshot((p) => (p - 1 + screenshots.length) % screenshots.length)}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-black/60 border border-white/10 hover:bg-black/80 transition-colors"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-lg hover:bg-white/20 hover:border-white/40 transition-all"
                 >
                   <ChevronLeft className="w-4 h-4 text-white" />
                 </button>
                 <button
                   onClick={() => setActiveScreenshot((p) => (p + 1) % screenshots.length)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-black/60 border border-white/10 hover:bg-black/80 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-lg hover:bg-white/20 hover:border-white/40 transition-all"
                 >
                   <ChevronRight className="w-4 h-4 text-white" />
                 </button>
@@ -322,19 +322,6 @@ export function ProjectsSection() {
     };
   }, [loop]);
 
-  /* ── Wheel → horizontal scroll ───────────────────────────────── */
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const onWheel = (e: WheelEvent) => {
-      if (e.deltaY === 0) return;
-      e.preventDefault();
-      el.scrollLeft += e.deltaY * 1.5;
-    };
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
-  }, []);
-
   return (
     <section
       id="projects"
@@ -377,7 +364,7 @@ export function ProjectsSection() {
             onMouseEnter={() => { edgeRef.current = "left"; }}
             onMouseLeave={() => { edgeRef.current = null; }}
           >
-            <div className="opacity-0 group-hover/left:opacity-100 transition-opacity duration-200 p-2.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
+            <div className="opacity-0 group-hover/left:opacity-100 transition-opacity duration-200 p-2.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-lg shadow-[0_8px_30px_rgba(255,255,255,0.05)]">
               <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M15 18l-6-6 6-6" />
               </svg>
@@ -394,7 +381,7 @@ export function ProjectsSection() {
             onMouseEnter={() => { edgeRef.current = "right"; }}
             onMouseLeave={() => { edgeRef.current = null; }}
           >
-            <div className="opacity-0 group-hover/right:opacity-100 transition-opacity duration-200 p-2.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
+            <div className="opacity-0 group-hover/right:opacity-100 transition-opacity duration-200 p-2.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-lg shadow-[0_8px_30px_rgba(255,255,255,0.05)]">
               <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M9 18l6-6-6-6" />
               </svg>
@@ -445,7 +432,7 @@ export function ProjectsSection() {
               {/* Close */}
               <button
                 onClick={() => setSelectedProject(null)}
-                className="absolute top-5 right-5 p-2 rounded-full border border-white/8 bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-white transition-all duration-200 cursor-pointer z-10"
+                className="absolute top-5 right-5 p-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-lg hover:bg-white/20 hover:border-white/40 text-white transition-all duration-200 cursor-pointer z-10 shadow-[0_8px_30px_rgba(255,255,255,0.05)]"
                 aria-label="Close"
               >
                 <X className="w-4 h-4" />
