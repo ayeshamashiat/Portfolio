@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowUpRight } from "lucide-react";
+import { useTheme } from "next-themes";
+import { DoodleLightBulb } from "@/components/ui/DoodleIcons";
 
 const NAV_ITEMS = [
   { name: "About", href: "#about" },
@@ -16,6 +18,12 @@ const NAV_ITEMS = [
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,11 +43,9 @@ export function Navbar() {
       }`}
     >
       <div className="max-w-6xl mx-auto px-4">
-        <div className="relative flex items-center justify-between px-6 py-3 rounded-full border border-white/5 bg-background/30 backdrop-blur-xl shadow-2xl transition-all">
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/5 to-secondary/5 opacity-50 pointer-events-none" />
-          
-          <a href="#" className="relative z-10 text-sm font-light tracking-[0.25em] text-white uppercase hover:opacity-80 transition-opacity">
-            Ayesha <span className="font-semibold text-primary">Mashiat</span>
+        <div className="relative flex items-center justify-between px-6 py-2.5 doodle-card shadow-sm transition-all">
+          <a href="#" className="relative z-10 text-xl font-bold tracking-wide text-foreground hover:opacity-80 transition-opacity font-display">
+            Ayesha <span className="font-semibold text-primary underline decoration-wavy">Mashiat</span>
           </a>
 
           {/* Desktop Nav */}
@@ -48,30 +54,50 @@ export function Navbar() {
               <a
                 key={item.name}
                 href={item.href}
-                className="text-xs font-medium text-muted-foreground hover:text-white uppercase tracking-widest transition-colors duration-200"
+                className="text-base font-bold text-muted-foreground hover:text-foreground uppercase tracking-wider transition-all duration-200 font-display hover:underline hover:decoration-wavy hover:underline-offset-4 hover:decoration-2"
               >
                 {item.name}
               </a>
             ))}
           </nav>
 
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-4">
+            {mounted && (
+              <button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="relative z-10 p-2 text-muted-foreground hover:text-foreground transition-all rounded-xl border-2 border-foreground/30 hover:border-foreground bg-background doodle-effect cursor-pointer"
+                aria-label="Toggle theme"
+              >
+                <DoodleLightBulb size={15} className={theme === "light" ? "fill-foreground text-foreground" : "text-muted-foreground"} />
+              </button>
+            )}
             <a
               href="#contact"
-              className="inline-flex items-center gap-1 text-xs font-medium uppercase tracking-widest text-white hover:text-primary transition-colors duration-200"
+              className="doodle-button inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-foreground hover:scale-102 active:scale-98 transition-all duration-200 font-display"
             >
               <span>Let's talk</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden relative z-10 p-1 text-muted-foreground hover:text-white transition-colors"
-          >
-            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          {/* Mobile Menu & Theme Button */}
+          <div className="md:hidden flex items-center gap-3 relative z-10">
+            {mounted && (
+              <button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="p-1.5 text-muted-foreground hover:text-foreground transition-all rounded-xl border-2 border-foreground/30 bg-background doodle-effect cursor-pointer"
+                aria-label="Toggle theme"
+              >
+                <DoodleLightBulb size={14} className={theme === "light" ? "fill-foreground text-foreground" : "text-muted-foreground"} />
+              </button>
+            )}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-1 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            >
+              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -83,7 +109,7 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="absolute top-full left-0 right-0 mx-4 mt-2 p-6 rounded-3xl border border-white/5 bg-[#030014]/95 backdrop-blur-2xl shadow-3xl md:hidden"
+            className="absolute top-full left-0 right-0 mx-4 mt-2 p-6 doodle-card shadow-lg md:hidden"
           >
             <nav className="flex flex-col gap-6">
               {NAV_ITEMS.map((item) => (
@@ -91,16 +117,16 @@ export function Navbar() {
                   key={item.name}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className="text-sm font-medium text-muted-foreground hover:text-white uppercase tracking-widest transition-colors"
+                  className="text-lg font-bold text-muted-foreground hover:text-foreground uppercase tracking-wider transition-colors font-display"
                 >
                   {item.name}
                 </a>
               ))}
-              <div className="pt-4 border-t border-white/5">
+              <div className="pt-4 border-t border-foreground/10">
                 <a
                   href="#contact"
                   onClick={() => setIsOpen(false)}
-                  className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-widest text-primary hover:text-white transition-colors"
+                  className="inline-flex items-center gap-2 text-lg font-bold uppercase tracking-wider text-foreground hover:underline transition-colors font-display"
                 >
                   <span>Get in Touch</span>
                   <ArrowUpRight className="w-4 h-4" />

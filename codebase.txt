@@ -1,6 +1,6 @@
 # CODEBASE DUMP
-# Root: /mnt/data/Documents/Personal Items/PROJECTS/Portfolio
-# Total files: 28
+# Root: /mnt/data/Documents/Personal Items/PROJECTS/Portfolio (Doodle)
+# Total files: 30
 ================================================================================
 
 ================================================================================
@@ -111,20 +111,41 @@ FILE: app/globals.css
 ================================================================================
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #030014;
-  --foreground: #f4f4f5;
-  --muted: #0d0b21;
-  --muted-foreground: #a1a1aa;
-  --border: rgba(255, 255, 255, 0.07);
-  --primary: #6366f1;
-  --secondary: #a855f7;
-  --accent: #d946ef;
-  --card-bg: rgba(255, 255, 255, 0.02);
-  --card-border: rgba(255, 255, 255, 0.05);
+  --background: #FAFAF7;
+  --foreground: #1a1a1a;
+  --muted: #eaeaea;
+  --muted-foreground: #666666;
+  --border: #1a1a1a;
+  --primary: #1a1a1a;
+  --secondary: #1a1a1a;
+  --accent: #1a1a1a;
+  --card-bg: #FFFFFF;
+  --card-border: #1a1a1a;
+  
+  --doodle-border: 2px solid currentColor;
+  --doodle-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  --paper-grid-line: rgba(26, 26, 26, 0.06);
 }
 
-@theme inline {
+.dark {
+  --background: #0f0f0f;
+  --foreground: #F0EFE8;
+  --muted: #222222;
+  --muted-foreground: #a0a09a;
+  --border: #F0EFE8;
+  --primary: #F0EFE8;
+  --secondary: #F0EFE8;
+  --accent: #F0EFE8;
+  --card-bg: #1a1a1a;
+  --card-border: #F0EFE8;
+  
+  --paper-grid-line: rgba(240, 239, 232, 0.06);
+}
+
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
@@ -135,16 +156,66 @@ FILE: app/globals.css
   --color-accent: var(--accent);
   --color-card-bg: var(--card-bg);
   --color-card-border: var(--card-border);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
+  --font-sans: var(--font-body), var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-heading), cursive, var(--font-sans);
 }
 
 body {
   background: var(--background);
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, var(--paper-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--paper-grid-line) 1px, transparent 1px);
   color: var(--foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  font-family: var(--font-body);
+  position: relative;
+}
+
+/* Red margin notebook line */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 45px;
+  width: 2px;
+  height: 100%;
+  background-color: rgba(239, 68, 68, 0.22);
+  pointer-events: none;
+  z-index: 49;
+}
+
+.dark body::before {
+  background-color: rgba(248, 113, 113, 0.18);
+}
+
+@media (max-w: 768px) {
+  body::before {
+    left: 20px;
+  }
+}
+
+/* Custom scrollbar matching sketch style */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+  border-left: 2.5px solid var(--border);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--foreground);
+  border: 3.5px solid var(--background);
+  border-radius: 99px;
+  filter: url(#doodle-border-filter);
+}
+
+/* Headings auto use display font */
+h1, h2, h3, h4, h5, h6, .font-display-auto {
+  font-family: var(--font-heading);
 }
 
 /* Custom utilities */
@@ -156,36 +227,100 @@ body {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+  
   .bg-grid-pattern {
-    background-size: 60px 60px;
-    background-image: linear-gradient(to right, rgba(99, 102, 241, 0.02) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(99, 102, 241, 0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(to right, var(--paper-grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--paper-grid-line) 1px, transparent 1px);
   }
+  
+  .hatch-bg {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 8px,
+      currentColor 8px,
+      currentColor 9.5px
+    );
+    opacity: 0.12;
+  }
+  
+  .hatch-bg-strong {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 5px,
+      currentColor 5px,
+      currentColor 6.5px
+    );
+  }
+
+  .doodle-effect {
+    filter: url(#doodle-border-filter);
+  }
+  
+  .doodle-card {
+    background-color: var(--card-bg);
+    border: 2.5px solid var(--border);
+    border-radius: var(--doodle-radius);
+    filter: url(#doodle-border-filter);
+    box-shadow: 3.5px 4.5px 0 0 currentColor;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .doodle-card:hover {
+    transform: translate(-1.5px, -2.5px);
+    box-shadow: 6px 7px 0 0 currentColor;
+  }
+  
+  .doodle-button {
+    background-color: var(--card-bg);
+    border: 2.5px solid var(--border);
+    border-radius: var(--doodle-radius);
+    filter: url(#doodle-border-filter);
+    box-shadow: 3px 3px 0 0 currentColor;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .doodle-button:hover {
+    transform: translate(-1px, -1.5px);
+    box-shadow: 4.5px 4.5px 0 0 currentColor;
+  }
+  
+  .doodle-button:active {
+    transform: translate(1.5px, 1.5px);
+    box-shadow: 1px 1px 0 0 currentColor;
+  }
+
   .glass-card {
-    background: rgba(255, 255, 255, 0.015);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    background-color: var(--card-bg);
+    border: 2.5px solid var(--border);
+    border-radius: var(--doodle-radius);
+    filter: url(#doodle-border-filter);
   }
+  
   .glass-nav {
-    background: rgba(3, 0, 20, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--background);
+    border-bottom: 2.5px solid var(--border);
+    filter: url(#doodle-border-filter);
   }
+  
   .glow-text {
-    text-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+    text-shadow: none;
   }
 }
-
 
 
 ================================================================================
 FILE: app/layout.tsx
 ================================================================================
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Caveat, Comic_Neue, Architects_Daughter, Patrick_Hand } from "next/font/google";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -196,6 +331,24 @@ const inter = Inter({
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
+});
+
+const caveat = Caveat({
+  variable: "--font-cursive",
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+});
+
+const architectsDaughter = Architects_Daughter({
+  variable: "--font-heading",
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
+const patrickHand = Patrick_Hand({
+  variable: "--font-body",
+  subsets: ["latin"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -211,9 +364,24 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${jetbrainsMono.variable} ${caveat.variable} ${architectsDaughter.variable} ${patrickHand.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans bg-black text-white selection:bg-white selection:text-black">{children}</body>
+      <body className="min-h-full flex flex-col font-sans bg-background text-foreground selection:bg-foreground selection:text-background transition-colors duration-300">
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          {children}
+        </ThemeProvider>
+        
+        {/* Inline SVG filters for wobbly hand-drawn effect */}
+        <svg style={{ position: "absolute", width: 0, height: 0, pointerEvents: "none" }} xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="doodle-border-filter" x="-5%" y="-5%" width="110%" height="110%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" result="noise" />
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.2" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+          </defs>
+        </svg>
+      </body>
     </html>
   );
 }
@@ -252,56 +420,77 @@ export default function Home() {
 
 
 ================================================================================
+FILE: components/ThemeProvider.tsx
+================================================================================
+"use client";
+
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+
+export function ThemeProvider({
+  children,
+  ...props
+}: React.ComponentProps<typeof NextThemesProvider>) {
+  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+}
+
+
+================================================================================
 FILE: components/sections/AboutSection.tsx
 ================================================================================
 "use client";
 
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
-import { Server, Database, Brain, CheckCircle } from "lucide-react";
-
-const VALUES = [
-  {
-    icon: <Server className="w-5 h-5 text-indigo-400" />,
-    title: "System Architecture",
-    description: "Designing structured backend engines engineered to run efficiently and scale reliably under high traffic."
-  },
-  {
-    icon: <Database className="w-5 h-5 text-purple-400" />,
-    title: "Data Orchestration",
-    description: "Structuring pipelines, optimizing queries, and securing databases to ensure data flows smoothly and safely."
-  },
-  {
-    icon: <Brain className="w-5 h-5 text-pink-400" />,
-    title: "Intelligent Integration",
-    description: "Seamlessly connecting AI models and predictive data pipelines into existing web and mobile environments."
-  },
-  {
-    icon: <CheckCircle className="w-5 h-5 text-emerald-400" />,
-    title: "Clarity & Quality",
-    description: "Writing transparent, well-tested code that remains maintainable and clear for engineering teams."
-  }
-];
+import {
+  DoodleMonitor,
+  DoodleCloud,
+  DoodleLightBulb,
+  DoodleShield,
+  DoodleStar,
+} from "@/components/ui/DoodleIcons";
 
 export function AboutSection() {
+  const VALUES = [
+    {
+      icon: <DoodleMonitor className="w-6 h-6 text-foreground" />,
+      title: "RESTful API Design",
+      description: "Building resilient, secure REST APIs with Express.js, Flask, and FastAPI that manage complex business logic and handle high transactional frequency."
+    },
+    {
+      icon: <DoodleCloud className="w-6 h-6 text-foreground" arrow="down" />,
+      title: "Database Engineering",
+      description: "Designing relational schemas in PostgreSQL/MySQL, writing optimized ORM interactions with SQLAlchemy, and tuning queries to reduce load latency."
+    },
+    {
+      icon: <DoodleLightBulb className="w-6 h-6 text-foreground" />,
+      title: "AI-Powered Systems",
+      description: "Integrating Large Language Models and building Retrieval-Augmented Generation (RAG) pipelines into backend platforms for tailored intelligent tools."
+    },
+    {
+      icon: <DoodleShield className="w-6 h-6 text-foreground" />,
+      title: "DevOps & Security",
+      description: "Implementing JWT authentication, role-based access control (RBAC), API rate-limiting, and deploying containerized environments using Docker."
+    }
+  ];
+
   return (
     <section id="about" className="py-32 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto relative">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-indigo-500/5 blur-[100px] pointer-events-none -z-10" />
+      {/* Decorative stars near title */}
+      <div className="absolute top-28 right-12 opacity-30 animate-pulse pointer-events-none">
+        <DoodleStar size={20} />
+      </div>
 
       <AnimatedSection>
-        <h2 className="text-xs uppercase tracking-[0.25em] text-primary mb-4 font-semibold">01 / Behind the Screen</h2>
-        <h3 className="text-3xl md:text-5xl font-bold mb-16 tracking-tight">My Approach to Building</h3>
+        <h2 className="text-xs uppercase tracking-[0.25em] text-primary mb-3 font-bold font-display">01 / Behind the Screen</h2>
+        <h3 className="text-4xl md:text-6xl font-bold mb-16 tracking-tight text-foreground font-display">My Approach to Building</h3>
       </AnimatedSection>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start mb-20">
-        <AnimatedSection delay={0.2} className="lg:col-span-6 space-y-6 text-lg text-muted-foreground font-light leading-relaxed">
+        <AnimatedSection delay={0.2} className="lg:col-span-6 space-y-6 text-base md:text-lg text-muted-foreground font-light leading-relaxed">
           <p>
-            I am a software engineer focused on architecting resilient backend systems and creating clear pathways for artificial intelligence integration. I build the unseen logic that makes applications fast, stable, and smart.
+            I'm a full-stack/backend developer and third-year Software Engineering student at Islamic University of Technology (IUT). I design and build secure, scalable backend architectures, database schemas, and robust API layers that power complex modern web applications.
           </p>
           <p>
-            My engineering philosophy centers on clarity and structural durability. I believe that backend architecture should perform silently under pressure, while remaining accessible and well-documented for long-term growth.
-          </p>
-          <p>
-            I combine classic software engineering patterns with modern data processing to connect complex databases, machine learning workflows, and customer-facing interfaces seamlessly.
+            From recruitment portals and AI career tailors to transparent charity platforms, my work focuses on ensuring strict data integrity, preventing state synchronization failures, and optimizing database interaction speeds. I believe in clean code, structural stability, and deploying systems that actually work under stress.
           </p>
         </AnimatedSection>
 
@@ -309,13 +498,16 @@ export function AboutSection() {
           {VALUES.map((val) => (
             <div 
               key={val.title}
-              className="p-6 rounded-2xl border border-white/5 bg-white/[0.01] backdrop-blur-md hover:border-white/10 transition-all duration-300 group"
+              className="p-6 doodle-card group relative overflow-hidden"
             >
-              <div className="p-3 w-fit rounded-xl bg-white/[0.03] group-hover:bg-white/[0.06] border border-white/5 transition-colors mb-4">
+              {/* Subtle hatch background detail on hover */}
+              <div className="absolute inset-0 hatch-bg opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none" />
+              
+              <div className="p-2.5 w-fit border-2 border-foreground/30 rounded-xl bg-background doodle-effect mb-4 relative z-10">
                 {val.icon}
               </div>
-              <h4 className="text-base font-semibold text-white mb-2">{val.title}</h4>
-              <p className="text-sm text-muted-foreground font-light leading-relaxed">{val.description}</p>
+              <h4 className="text-lg font-bold text-foreground mb-2 font-display relative z-10">{val.title}</h4>
+              <p className="text-sm text-muted-foreground font-light leading-relaxed relative z-10">{val.description}</p>
             </div>
           ))}
         </AnimatedSection>
@@ -330,40 +522,156 @@ FILE: components/sections/AchievementsSection.tsx
 ================================================================================
 "use client";
 
+import { useState } from "react";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
+import { X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { DoodleMegaphone, DoodleTape, DoodleStar } from "@/components/ui/DoodleIcons";
+
+const ACHIEVEMENTS = [
+  {
+    id: "solvio",
+    title: "SOLVIO Top 100",
+    issuer: "SOLVIO Competition",
+    date: "2025",
+    team: "Team #336",
+    category: "Hackathon",
+    description:
+      "Ranked in the Top 100 teams out of all participants in the SOLVIO competition — a prestigious national-level engineering and complex systems problem-solving challenge.",
+    certificate: "/resources/Achievement/SOLVIO_Top100_Certificate_Team_336.png",
+    badge: "Top 100",
+  },
+];
 
 export function AchievementsSection() {
+  const [lightbox, setLightbox] = useState<string | null>(null);
+
   return (
-    <section id="achievements" className="py-32 px-6 md:px-12 lg:px-24">
+    <section id="achievements" className="py-32 px-6 md:px-12 lg:px-24 relative overflow-hidden">
+      {/* Background stars */}
+      <motion.div
+        animate={{ y: [0, 8, 0], rotate: [0, 10, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-16 right-1/4 opacity-25 pointer-events-none"
+      >
+        <DoodleStar size={24} />
+      </motion.div>
+
       <div className="max-w-7xl mx-auto">
-        <AnimatedSection>
-          <h2 className="text-xs uppercase tracking-[0.25em] text-primary mb-4 font-semibold">05 / Milestones</h2>
-          <h3 className="text-3xl md:text-5xl font-bold mb-16 tracking-tight">Achievements</h3>
-        </AnimatedSection>
-
-        <AnimatedSection delay={0.2}>
-          <div className="relative rounded-3xl border border-dashed border-white/10 bg-white/[0.005] p-12 md:p-20 text-center flex flex-col items-center justify-center max-w-4xl mx-auto overflow-hidden">
-            {/* Ambient subtle glow */}
-            <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent opacity-50 pointer-events-none" />
-
-            <div className="p-4 rounded-full bg-white/[0.02] border border-white/5 mb-6 relative z-10">
-              <svg className="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="8" r="6" />
-                <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
-              </svg>
-            </div>
-            
-            <h4 className="text-xl font-semibold text-white mb-2 relative z-10">Recognition & Honors</h4>
-            <p className="text-sm text-muted-foreground font-light max-w-sm leading-relaxed relative z-10">
-              A curated collection of certificates, milestones, and awards is currently being compiled. Updates will appear here soon.
+        <AnimatedSection className="flex items-center gap-4 mb-16">
+          <div>
+            <h2 className="text-xs uppercase tracking-[0.25em] text-foreground/70 mb-4 font-bold font-display">05 / Milestones</h2>
+            <h3 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground font-display flex items-center gap-3">
+              <span>Achievements</span>
+            </h3>
+            <p className="text-muted-foreground font-light text-sm md:text-base mt-3 max-w-xl leading-relaxed">
+              Recognition earned through competitions, teamwork, hackathons, and independent challenges.
             </p>
           </div>
+          <DoodleMegaphone className="text-foreground/70 animate-bounce ml-auto hidden sm:block" size={40} />
         </AnimatedSection>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          {ACHIEVEMENTS.map((item, index) => (
+            <AnimatedSection key={item.id} delay={index * 0.1}>
+              <div
+                className="doodle-card group relative overflow-hidden flex flex-col h-full pb-6 pt-2 bg-card-bg"
+              >
+                {/* Polaroid Tape decoration */}
+                <DoodleTape text="AWARDED" className="-top-1.5 left-1/2 -translate-x-1/2 z-10" />
+
+                {/* Certificate thumbnail */}
+                <div
+                  className="relative aspect-[4/3] overflow-hidden border-b-2 border-foreground/35 cursor-zoom-in bg-background m-4 rounded-sm border-2 border-foreground/15 shadow-sm"
+                  onClick={() => setLightbox(item.certificate)}
+                >
+                  <img
+                    src={item.certificate}
+                    alt={`${item.title} certificate`}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent" />
+                  
+                  {/* Zoom hint */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span className="px-3.5 py-2 rounded-xl border-2 border-foreground bg-background text-xs font-bold tracking-wider text-foreground uppercase doodle-effect shadow-[2px_2px_0_0_currentColor]">
+                      View Certificate
+                    </span>
+                  </div>
+                  
+                  {/* Badge overlay */}
+                  <div
+                    className="absolute top-3 left-3 px-2.5 py-1 rounded text-[9px] font-bold uppercase tracking-widest border-2 border-foreground bg-background text-foreground doodle-effect shadow-[1.5px_1.5px_0_0_currentColor]"
+                  >
+                    {item.badge}
+                  </div>
+                </div>
+
+                {/* Card body */}
+                <div className="px-6 flex flex-col gap-4 flex-1">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h4 className="text-lg font-bold text-foreground leading-snug">{item.title}</h4>
+                      <span className="text-xs text-foreground/80 font-bold font-display underline decoration-wavy underline-offset-4">{item.issuer}</span>
+                    </div>
+                    <span
+                      className="shrink-0 text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded border-2 border-foreground bg-background text-foreground doodle-effect shadow-[1.5px_1.5px_0_0_currentColor] font-display"
+                    >
+                      {item.category}
+                    </span>
+                  </div>
+
+                  <p className="text-sm text-muted-foreground font-light leading-relaxed flex-1">
+                    {item.description}
+                  </p>
+
+                  <div className="flex items-center justify-between pt-4 border-t-2 border-dashed border-foreground/15 text-xs text-foreground/60 font-bold font-display">
+                    <span>{item.team}</span>
+                    <span>{item.date}</span>
+                  </div>
+                </div>
+              </div>
+            </AnimatedSection>
+          ))}
+        </div>
       </div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightbox && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[120] flex items-center justify-center p-4 md:p-12 bg-black/80 backdrop-blur-sm cursor-zoom-out"
+            onClick={() => setLightbox(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.92, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.92, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="relative max-w-4xl w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setLightbox(null)}
+                className="absolute -top-4 -right-4 z-10 p-2.5 rounded-xl border-2 border-foreground text-foreground bg-background hover:bg-muted transition-colors doodle-effect shadow-[2px_2px_0_0_currentColor] cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+              <img
+                src={lightbox}
+                alt="Certificate"
+                className="w-full rounded border-2 border-foreground shadow-lg doodle-effect"
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
-
 
 ================================================================================
 FILE: components/sections/ContactSection.tsx
@@ -372,31 +680,64 @@ FILE: components/sections/ContactSection.tsx
 
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { Mail, ArrowRight } from "lucide-react";
+import { DoodleBell, DoodleStar, DoodleSpeechBubble, DoodleArrow } from "@/components/ui/DoodleIcons";
+import { motion } from "framer-motion";
 
 export function ContactSection() {
   return (
-    <section id="contact" className="py-32 px-6 md:px-12 lg:px-24 border-t border-white/5 bg-white/[0.005] relative overflow-hidden">
-      {/* Background ambient light */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full bg-gradient-to-t from-primary/10 to-transparent blur-[120px] pointer-events-none -z-10" />
+    <section id="contact" className="py-32 px-6 md:px-12 lg:px-24 border-t-2 border-foreground/30 relative overflow-hidden bg-background doodle-effect">
+      {/* Background grid pattern */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
+
+      {/* Floating doodles */}
+      <motion.div
+        animate={{ y: [0, -8, 0], rotate: [0, -8, 0] }}
+        transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-20 left-16 opacity-30 pointer-events-none"
+      >
+        <DoodleBell size={32} />
+      </motion.div>
+
+      <motion.div
+        animate={{ rotate: [0, 360] }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        className="absolute bottom-24 right-1/4 opacity-40 pointer-events-none"
+      >
+        <DoodleStar size={24} />
+      </motion.div>
 
       <div className="max-w-4xl mx-auto text-center relative z-10">
-        <AnimatedSection>
-          <span className="text-xs uppercase tracking-[0.25em] text-primary mb-4 font-semibold block">05 / Get in Touch</span>
-          <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">Let's build something together</h2>
-          <p className="text-lg md:text-xl text-muted-foreground mb-12 max-w-xl mx-auto font-light leading-relaxed">
-            I am always open to new project opportunities, collaborations, or discussing scalability and systems design. Feel free to reach out.
+        <AnimatedSection className="relative">
+          {/* Float Speech Bubble above header */}
+          <motion.div
+            animate={{ y: [0, -4, 0], rotate: [6, 10, 6] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -top-16 right-16 md:right-32 z-20 pointer-events-none"
+          >
+            <DoodleSpeechBubble text="Ping me!" size={58} />
+          </motion.div>
+
+          <span className="text-xs uppercase tracking-[0.25em] text-foreground/70 mb-4 font-bold block font-display">06 / Get in Touch</span>
+          <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight text-foreground font-display">Let's build something together</h2>
+          <p className="text-base md:text-lg text-muted-foreground mb-12 max-w-xl mx-auto font-light leading-relaxed">
+            I am always open to new project opportunities, collaborations, or discussing scalability, APIs, and systems design. Feel free to drop a message.
           </p>
         </AnimatedSection>
 
-        <AnimatedSection delay={0.2}>
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
+        <AnimatedSection delay={0.2} className="relative flex flex-col items-center">
+          {/* Hand pointing to send button */}
+          <div className="absolute -left-12 top-1/2 -translate-y-1/2 hidden md:block opacity-40">
+            <DoodleArrow size={30} direction="right" className="animate-pulse" />
+          </div>
+
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-6 w-full sm:w-auto">
             <a 
               href="mailto:hello@example.com" 
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-white text-black font-semibold hover:bg-neutral-200 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] group"
+              className="doodle-button w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 text-foreground font-bold group font-display text-base cursor-pointer"
             >
               <Mail className="w-4 h-4" />
               <span>Send Message</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </a>
             
             <div className="flex gap-4">
@@ -404,10 +745,10 @@ export function ContactSection() {
                 href="https://github.com/ayeshamashiat" 
                 target="_blank"
                 rel="noreferrer"
-                className="p-4 rounded-full border border-white/10 hover:border-white/30 text-muted-foreground hover:text-white bg-white/5 backdrop-blur-md transition-all duration-300 hover:scale-[1.02]"
+                className="doodle-button p-4 text-foreground cursor-pointer"
                 aria-label="GitHub Profile"
               >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
                   <path d="M9 18c-4.51 2-5-2-7-2" />
                 </svg>
@@ -416,10 +757,10 @@ export function ContactSection() {
                 href="https://linkedin.com" 
                 target="_blank"
                 rel="noreferrer"
-                className="p-4 rounded-full border border-white/10 hover:border-white/30 text-muted-foreground hover:text-white bg-white/5 backdrop-blur-md transition-all duration-300 hover:scale-[1.02]"
+                className="doodle-button p-4 text-foreground cursor-pointer"
                 aria-label="LinkedIn Profile"
               >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
                   <rect width="4" height="12" x="2" y="9" />
                   <circle cx="4" cy="4" r="2" />
@@ -430,9 +771,9 @@ export function ContactSection() {
         </AnimatedSection>
       </div>
       
-      <div className="mt-40 text-center text-xs tracking-wider text-muted-foreground font-light">
+      <div className="mt-40 text-center text-xs tracking-wider text-muted-foreground font-light font-display">
         <p>© {new Date().getFullYear()} Ayesha Mashiat. All rights reserved.</p>
-        <p className="mt-2 text-white/20">Designed & Engineered with clarity.</p>
+        <p className="mt-2 text-foreground/40 font-bold underline decoration-wavy underline-offset-4">Designed & Engineered with hand-drawn precision.</p>
       </div>
     </section>
   );
@@ -445,44 +786,103 @@ FILE: components/sections/ExperienceSection.tsx
 "use client";
 
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
+import { DoodleHourglass, DoodleTape, DoodleStar } from "@/components/ui/DoodleIcons";
+import { motion } from "framer-motion";
 
-const EXPERIENCE = [
+const TIMELINE = [
   {
-    role: "Software Engineering Specialist",
-    company: "Academic & Independent Development",
+    type: "education",
+    role: "B.Sc. Software Engineering",
+    company: "Islamic University of Technology (IUT)",
     date: "2023 - Present",
-    description: "Designing algorithms, engineering distributed backend services, and configuring machine learning pipelines. Building complex full-stack apps and backend-heavy data platforms."
-  },
-  {
-    role: "Backend Architect & API Developer",
-    company: "Open Source / Independent Projects",
-    date: "2024 - Present",
-    description: "Developing microservices, optimizing fast-access database layers, and integrating predictive model structures into clean REST APIs."
+    badge: "3rd Year",
+    description:
+      "Specializing in software design, backend architectures, databases, and distributed systems. Applying academic patterns to construct production-ready web and AI applications.",
+    highlights: [
+      "Database Design & Query Tuning",
+      "REST API Architecture & Integration",
+      "Distributed Cloud Systems & AWS",
+      "Data Structures & Algorithms",
+      "Architectural Design Patterns",
+      "Systems Scalability & Security",
+    ],
   }
 ];
 
 export function ExperienceSection() {
   return (
-    <section id="experience" className="py-32 px-6 md:px-12 lg:px-24">
+    <section id="experience" className="py-32 px-6 md:px-12 lg:px-24 relative overflow-hidden">
+      {/* Floating Star */}
+      <motion.div
+        animate={{ y: [0, -10, 0] }}
+        transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-24 left-1/4 opacity-25 pointer-events-none"
+      >
+        <DoodleStar size={24} />
+      </motion.div>
+
       <div className="max-w-4xl mx-auto">
-        <AnimatedSection>
-          <h2 className="text-xs uppercase tracking-[0.25em] text-primary mb-4 font-semibold">04 / Journey</h2>
-          <h3 className="text-3xl md:text-5xl font-bold mb-20 tracking-tight">Professional Experience</h3>
+        <AnimatedSection className="flex items-center gap-4 mb-16">
+          <div>
+            <h2 className="text-xs uppercase tracking-[0.25em] text-foreground/70 mb-4 font-bold font-display">04 / Timeline</h2>
+            <h3 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground font-display flex items-center gap-3">
+              <span>Education & Journey</span>
+            </h3>
+          </div>
+          <DoodleHourglass className="opacity-70 animate-pulse ml-auto" size={36} />
         </AnimatedSection>
 
-        <div className="relative border-l border-white/10 pl-8 md:pl-12 ml-4 space-y-16">
-          {EXPERIENCE.map((exp, index) => (
+        <div className="relative border-l-[3px] border-foreground/30 pl-8 md:pl-16 ml-4 md:ml-6 space-y-16 doodle-effect">
+          {TIMELINE.map((item, index) => (
             <AnimatedSection key={index} delay={index * 0.1}>
               <div className="relative">
-                {/* Timeline node */}
-                <div className="absolute -left-[39px] md:-left-[55px] top-1.5 w-4 h-4 rounded-full bg-background border-2 border-primary shadow-[0_0_10px_rgba(99,102,241,0.5)]" />
-                
-                <span className="text-xs font-semibold tracking-wider text-primary uppercase block mb-2">{exp.date}</span>
-                <h4 className="text-xl md:text-2xl font-bold text-white mb-1">{exp.role}</h4>
-                <span className="text-neutral-300 font-medium block mb-4">{exp.company}</span>
-                <p className="text-muted-foreground text-base leading-relaxed font-light">
-                  {exp.description}
-                </p>
+                {/* Wobbly Hourglass Timeline Node */}
+                <div className="absolute -left-[49px] md:-left-[82px] top-1.5 z-10 flex items-center justify-center bg-background border-2 border-foreground rounded-full p-1.5 w-9 h-9 md:w-12 md:h-12 doodle-effect shadow-[2px_2px_0_0_currentColor]">
+                  <DoodleHourglass size={18} className="text-foreground" />
+                </div>
+
+                {/* Timeline Card */}
+                <div className="doodle-card p-6 md:p-8 relative group">
+                  <div className="absolute inset-0 hatch-bg opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none" />
+
+                  {/* Tape header decoration */}
+                  <DoodleTape text="CERTIFIED" className="-top-3 left-10 md:left-14" />
+
+                  {/* Date + badge row */}
+                  <div className="flex flex-wrap items-center gap-4 mb-4 mt-2">
+                    <span className="text-sm font-bold tracking-wider text-foreground/80 uppercase font-display">
+                      {item.date}
+                    </span>
+                    <span
+                      className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded border-2 border-foreground bg-background text-foreground doodle-effect shadow-[1.5px_1.5px_0_0_currentColor]"
+                    >
+                      {item.badge}
+                    </span>
+                  </div>
+
+                  <h4 className="text-2xl font-black text-foreground mb-1 leading-snug">{item.role}</h4>
+                  <span className="text-foreground/80 font-bold block mb-5 font-display underline decoration-wavy decoration-1 underline-offset-4">{item.company}</span>
+                  
+                  <p className="text-muted-foreground text-sm md:text-base leading-relaxed mb-6 font-light">
+                    {item.description}
+                  </p>
+
+                  {/* Highlights grid */}
+                  <div className="border-t-2 border-dashed border-foreground/15 pt-5">
+                    <span className="text-xs uppercase tracking-[0.20em] text-muted-foreground block mb-3 font-bold font-display">Core Learnings:</span>
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {item.highlights.map((point, i) => (
+                        <li
+                          key={i}
+                          className="flex items-center gap-2.5 text-sm font-bold text-foreground/90 font-display"
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-foreground shrink-0" />
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
               </div>
             </AnimatedSection>
           ))}
@@ -492,7 +892,6 @@ export function ExperienceSection() {
   );
 }
 
-
 ================================================================================
 FILE: components/sections/HeroSection.tsx
 ================================================================================
@@ -500,62 +899,146 @@ FILE: components/sections/HeroSection.tsx
 
 import { motion } from "framer-motion";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
-import { ArrowDown, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import {
+  DoodleStar,
+  DoodleCloud,
+  DoodleSpeechBubble,
+  DoodleMonitor,
+  DoodleArrow,
+} from "@/components/ui/DoodleIcons";
+import { TerminalText } from "@/components/ui/TerminalText";
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 overflow-hidden">
-      {/* Ambient background glow spheres */}
-      <div className="absolute top-1/4 right-0 w-[400px] h-[400px] rounded-full bg-primary/10 blur-[100px] pointer-events-none -z-10 animate-pulse" style={{ animationDuration: "8s" }} />
-      <div className="absolute bottom-1/4 -left-10 w-[350px] h-[350px] rounded-full bg-secondary/10 blur-[100px] pointer-events-none -z-10 animate-pulse" style={{ animationDuration: "12s" }} />
-      
-      <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
+    <section className="relative min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 overflow-hidden pt-24 pb-12">
+      {/* Grid Pattern */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-45 pointer-events-none" />
 
-      <div className="relative z-10 max-w-4xl mt-12">
-        <AnimatedSection delay={0.1}>
-          <div className="text-xs md:text-sm font-medium mb-6 text-primary uppercase tracking-[0.2em] flex items-center gap-3">
-            <span className="w-6 h-[1px] bg-primary"></span>
-            Ayesha Mashiat
-          </div>
-        </AnimatedSection>
-        
-        <AnimatedSection delay={0.2}>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight mb-8 leading-[1.05]">
-            I build the logic <br />
-            <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              that powers scale.
-            </span>
-          </h1>
-        </AnimatedSection>
+      {/* Floating Doodles Background */}
+      <motion.div
+        animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-28 right-24 md:right-40 opacity-70 pointer-events-none"
+      >
+        <DoodleCloud size={60} arrow="down" />
+      </motion.div>
 
-        <AnimatedSection delay={0.4}>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed font-light">
-            I design and build reliable backend systems and integrate artificial intelligence to solve complex problems. Focused on performance, data integrity, and clean structures that scale effortlessly.
-          </p>
-        </AnimatedSection>
+      <motion.div
+        animate={{ rotate: [0, 360] }}
+        transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+        className="absolute top-48 left-12 md:left-24 opacity-60 pointer-events-none"
+      >
+        <DoodleStar size={24} />
+      </motion.div>
 
-        <AnimatedSection delay={0.6}>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <a 
-              href="#projects" 
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-white text-black font-semibold hover:bg-neutral-200 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-[0_8px_30px_rgba(255,255,255,0.1)]"
-            >
-              <span>Explore My Work</span>
-              <ArrowRight className="w-4 h-4" />
-            </a>
-            <a 
-              href="#contact" 
-              className="inline-flex items-center justify-center px-8 py-4 rounded-full border border-white/10 hover:border-white/30 text-white font-medium bg-white/5 hover:bg-white/10 backdrop-blur-md hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
-            >
-              <span>Get in Touch</span>
-            </a>
-          </div>
-        </AnimatedSection>
+      <motion.div
+        animate={{ y: [0, 8, 0], scale: [1, 1.08, 1] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-32 right-1/3 opacity-55 pointer-events-none"
+      >
+        <DoodleStar size={30} />
+      </motion.div>
+
+      {/* Decorative Hand-drawn symbols */}
+      <div className="absolute top-36 left-1/3 text-2xl font-heading opacity-15 rotate-[12deg] pointer-events-none select-none">
+        @
+      </div>
+      <div className="absolute bottom-40 right-16 text-3xl font-heading opacity-15 rotate-[-15deg] pointer-events-none select-none">
+        #
+      </div>
+      <div className="absolute bottom-72 left-8 text-2xl font-heading opacity-10 rotate-[25deg] pointer-events-none select-none">
+        {`{ ... }`}
       </div>
 
-      <AnimatedSection delay={1.0} className="absolute bottom-12 left-6 md:left-12 lg:left-24">
-        <a href="#about" className="flex items-center gap-2 text-xs uppercase tracking-[0.20em] text-muted-foreground hover:text-white transition-colors">
-          <ArrowDown className="w-3.5 h-3.5 animate-bounce" />
+      <div className="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        
+        {/* Left Intro Column */}
+        <div className="lg:col-span-7 space-y-8 text-left mt-8 lg:mt-0">
+          <AnimatedSection delay={0.1}>
+            <div className="text-xs md:text-sm font-bold text-primary uppercase tracking-[0.2em] flex items-center gap-3 font-display">
+              <span className="w-6 h-[2.5px] bg-primary"></span>
+              Ayesha Mashiat
+            </div>
+          </AnimatedSection>
+
+          <AnimatedSection delay={0.2} className="relative">
+            {/* Float 'hi!' Speech Bubble near name */}
+            <motion.div
+              animate={{ y: [0, -6, 0], rotate: [-8, -4, -8] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -top-12 left-52 md:left-72 z-20 pointer-events-none"
+            >
+              <DoodleSpeechBubble text="hi!" size={50} />
+            </motion.div>
+
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight mb-4 leading-[1.05] text-foreground">
+              Ayesha <span className="underline decoration-wavy decoration-3">Mashiat</span>
+            </h1>
+            <p className="text-xl md:text-2xl font-bold text-foreground leading-relaxed font-display mt-4">
+              Backend Developer & Software Engineering Student
+            </p>
+          </AnimatedSection>
+
+          <AnimatedSection delay={0.4}>
+            <p className="text-base md:text-lg text-muted-foreground max-w-2xl leading-relaxed font-light">
+              Third-year Software Engineering student at IUT. By day, I study databases and system architecture; by night, I build robust, scalable REST APIs, secure authentication systems, and LLM/RAG AI tools that survive production pressure. Driven by warm tea and a curiosity for how complex systems stay online.
+            </p>
+          </AnimatedSection>
+
+          <AnimatedSection delay={0.6}>
+            <div className="flex flex-wrap gap-4 items-center">
+              <a
+                href="#projects"
+                className="doodle-button inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-foreground font-bold hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 font-display text-base cursor-pointer"
+              >
+                <span>Explore My Work</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
+              <a
+                href="#contact"
+                className="doodle-button inline-flex items-center justify-center px-6 py-3.5 text-foreground font-bold hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 font-display text-base cursor-pointer"
+              >
+                <span>Get in Touch</span>
+              </a>
+            </div>
+          </AnimatedSection>
+        </div>
+
+        {/* Right Terminal Column */}
+        <div className="lg:col-span-5 flex justify-center w-full relative z-10">
+          <AnimatedSection delay={0.5} className="w-full max-w-[420px] lg:max-w-none">
+            {/* Pointing hand doodle pointing to projects */}
+            <motion.div 
+              animate={{ x: [0, 8, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity }}
+              className="absolute -left-12 bottom-12 hidden xl:block text-foreground opacity-60"
+            >
+              <DoodleArrow size={36} direction="right" />
+            </motion.div>
+
+            <DoodleMonitor className="w-full">
+              <div className="bg-[#151515] text-[#e5e5e0] p-4 font-mono text-[11px] sm:text-xs leading-relaxed h-[240px] overflow-y-auto space-y-2 select-text no-scrollbar border-[1.5px] border-foreground/30 rounded-md">
+                <div className="text-green-400 font-semibold">ayesha@iut-server:~$ npm run dev</div>
+                <div className="text-neutral-500">Ready in 380ms (Turbopack)</div>
+                <div className="text-cyan-400">▲ Next.js 16.2.6 (v4 compiler)</div>
+                <div className="text-neutral-400">- Local: http://localhost:3000</div>
+                <div className="text-neutral-500">◇ Connecting to PostgreSQL Pool...</div>
+                <div className="text-green-400">✓ DB connection successful. pool_size=15</div>
+                <div className="text-neutral-500">◇ Init tailored CV guidance engine (RAG)...</div>
+                <div className="text-green-400">✓ Vector DB and OpenAI client loaded.</div>
+                <div className="text-yellow-400">✦ System Ready. Monitoring webhooks...</div>
+                <TerminalText text="tail -f /var/log/syslog" delay={3.5} prefix="ayesha@iut-server:~$ " className="text-white" />
+              </div>
+            </DoodleMonitor>
+          </AnimatedSection>
+        </div>
+      </div>
+
+      {/* Bottom Scroll Guide */}
+      <AnimatedSection delay={1.0} className="absolute bottom-8 left-6 md:left-12 lg:left-24">
+        <a href="#about" className="flex items-center gap-2.5 text-xs uppercase tracking-[0.20em] text-muted-foreground hover:text-foreground transition-colors font-display font-bold">
+          <DoodleArrow size={16} direction="down" className="animate-bounce" />
           <span>Scroll to explore</span>
         </a>
       </AnimatedSection>
@@ -571,7 +1054,7 @@ FILE: components/sections/ProjectsSection.tsx
 
 import { useRef, useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Globe, X, ArrowUpRight } from "lucide-react";
+import { Globe, X, ArrowUpRight, Play, ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 
 const PROJECTS = [
@@ -610,6 +1093,12 @@ const PROJECTS = [
     live: "#",
     image: "/calorie_adventure_preview.png",
     accent: "#a855f7",
+    video: "/resources/CalorieAdventureGame/CalorieAdventureGame.mp4",
+    screenshots: [
+      "/resources/CalorieAdventureGame/screenshot1.png",
+      "/resources/CalorieAdventureGame/screenshot2.png",
+      "/resources/CalorieAdventureGame/screenshot3.png",
+    ],
     details: {
       overview:
         "Calorie Adventure is an offline 2D arcade game built in vanilla Java. Players control a cat character that navigates dynamic platform loops to collect healthy nutrition items. It features custom pixel collision detection and flat-file systems to manage persistent local scores and player levels.",
@@ -623,47 +1112,49 @@ const PROJECTS = [
   },
   {
     id: "03",
-    title: "Personal Asset Manager API",
+    title: "Kindle Hope",
     description:
-      "A high-performance central API designed for organizing resources and files, optimized for database queries and modular scaling.",
-    techStack: ["Node.js", "Express", "JavaScript", "REST APIs"],
+      "A comprehensive charity and donation platform connecting donors with impactful causes, featuring secure payment gateways and transparent fund tracking.",
+    techStack: ["React", "Node.js", "Express", "MongoDB"],
     highlights:
-      "Implements decoupled middleware pathways and automated query indexing for speed.",
-    github: "https://github.com/ayeshamashiat/PAMS_Backend",
+      "Provides a transparent ledger for real-time tracking of charitable donations and fund allocation.",
+    github: "https://github.com/adrita06/Kindle_Hope",
     live: "#",
-    image: "/asset_manager_preview.png",
-    accent: "#d946ef",
+    image: "/kindle_hope_preview.png",
+    accent: "#f59e0b",
     details: {
       overview:
-        "PAMS is a microservice-oriented backend designed to manage assets, media logs, and system credentials. Built on Node.js and Express, it features custom middleware validation layers and high-performance querying paths to handle large structured asset data.",
+        "Kindle Hope is a full-stack web application designed to bridge the gap between philanthropists and meaningful causes. The platform ensures seamless and secure donation flows, empowering users to track the impact of their contributions over time.",
       features: [
-        "Highly modular route separation with middleware chain injection.",
-        "Advanced response payload optimization and gzip compression.",
-        "Secure JSON Web Token (JWT) verification and access level gates.",
-        "Comprehensive health-checks and logging configurations.",
+        "Secure and seamless payment integration for donations.",
+        "Real-time progress tracking for various charitable campaigns.",
+        "User dashboard for managing contribution history and impact metrics.",
+        "Responsive, accessible UI designed for high engagement and trust.",
       ],
     },
   },
   {
-    id: "04",
-    title: "Algorithm Visualizer",
+    id: "05",
+    title: "CareerPilot CodeSprint",
     description:
-      "An interactive educational web app designed to explain complex sorting and pathfinding algorithms visually in real-time.",
-    techStack: ["React", "JavaScript", "Algorithms", "CSS Animations"],
+      "An intelligent CV tailoring platform leveraging AI to optimize user resumes for specific job descriptions with persistent history tracking.",
+    techStack: ["React", "Python", "Flask", "MongoDB"],
     highlights:
-      "Features dynamic UI states syncing with logical algorithm steps.",
-    github: "https://github.com/ayeshamashiat/AlgoVisualizer",
+      "Integrates AI models for automated resume adjustments and maintains a robust CV generation history.",
+    github: "https://github.com/ayeshamashiat/CareerPilor_CodeSprint",
     live: "#",
-    image: "/algo_visualizer_preview.png",
-    accent: "#06b6d4",
+    image: "/career_pilot_preview.png",
+    accent: "#10b981",
+    video: "https://www.youtube.com/watch?v=_xa97LQYlAM",
+    screenshots: [],
     details: {
       overview:
-        "The Algorithm Visualizer is a client-side React application that animates data structures in real-time. By implementing sorting (Quicksort, Mergesort, Bubble Sort) and pathfinding step-by-step, it renders active changes on canvas/bars, syncing execution delays with state controls.",
+        "CareerPilot CodeSprint is an advanced CV enhancement tool that matches a user's resume against targeted job descriptions. It automates keyword optimization and layout structuring while storing tailored versions in a secure, persistent MongoDB database.",
       features: [
-        "Dynamic visualization speed slider and step-by-step execution control.",
-        "Real-time swap and comparison tracking counters.",
-        "Code debugger view highlighting active lines of code during visualization.",
-        "Responsive, dark-themed styling designed for smooth animation frames.",
+        "AI-driven CV parsing and keyword optimization algorithms.",
+        "Persistent CV storage and detailed tailored CV history.",
+        "Cloudinary integration for secure file uploads and management.",
+        "Intuitive frontend flow supporting side-by-side job description comparisons.",
       ],
     },
   },
@@ -673,157 +1164,400 @@ const PROJECTS = [
 const AUTO_SPEED = 0.6;     // px per frame — gentle drift
 const EDGE_SPEED = 8;       // px per frame — fast when hovering edge zones
 
-export function ProjectsSection() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [selectedProject, setSelectedProject] = useState<(typeof PROJECTS)[0] | null>(null);
+/* ─── Media gallery component ────────────────────────────────────── */
+function getYouTubeEmbedUrl(url: string): string | null {
+  const patterns = [
+    /youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/,
+    /youtu\.be\/([a-zA-Z0-9_-]+)/,
+  ];
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return `https://www.youtube.com/embed/${match[1]}`;
+  }
+  return null;
+}
 
-  // Paused states
-  const isPausedRef = useRef(false);   // hovered a card
-  const edgeRef = useRef<null | "left" | "right">(null); // hovered an edge zone
+interface MediaGalleryProps {
+  video?: string;
+  screenshots?: string[];
+  accent: string;
+  title: string;
+}
 
-  const rafRef = useRef<number | null>(null);
+function MediaGallery({ video, screenshots, accent, title }: MediaGalleryProps) {
+  const [activeTab, setActiveTab] = useState<"video" | "screenshots">(
+    video ? "video" : "screenshots"
+  );
+  const [activeScreenshot, setActiveScreenshot] = useState(0);
 
-  // Duplicate the list for infinite loop effect
-  const cards = [...PROJECTS, ...PROJECTS, ...PROJECTS];
-
-  /* ── rAF loop ─────────────────────────────────────────────────── */
-  const loop = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    if (edgeRef.current === "left") {
-      el.scrollLeft -= EDGE_SPEED;
-    } else if (edgeRef.current === "right") {
-      el.scrollLeft += EDGE_SPEED;
-    } else if (!isPausedRef.current) {
-      el.scrollLeft += AUTO_SPEED;
-
-      // Seamless loop: when we've scrolled past 2/3, reset to 1/3
-      const third = el.scrollWidth / 3;
-      if (el.scrollLeft >= third * 2) {
-        el.scrollLeft -= third;
-      }
-      if (el.scrollLeft <= 0) {
-        el.scrollLeft = third;
-      }
-    }
-
-    rafRef.current = requestAnimationFrame(loop);
-  }, []);
-
-  useEffect(() => {
-    // Kick off from the middle third so there's room to scroll either way
-    const el = scrollRef.current;
-    if (el) {
-      el.scrollLeft = el.scrollWidth / 3;
-    }
-    rafRef.current = requestAnimationFrame(loop);
-    return () => {
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-    };
-  }, [loop]);
-
-  /* ── Wheel → horizontal scroll ───────────────────────────────── */
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const onWheel = (e: WheelEvent) => {
-      if (e.deltaY === 0) return;
-      e.preventDefault();
-      el.scrollLeft += e.deltaY * 1.5;
-    };
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
-  }, []);
+  const hasBoth = !!video && !!screenshots?.length;
 
   return (
-    <section
-      id="projects"
-      className="py-32 overflow-hidden relative"
-    >
-      {/* Ambient background glow */}
-      <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[140px] pointer-events-none -z-10" />
-      <div className="absolute top-1/3 right-1/4 w-[300px] h-[300px] rounded-full bg-secondary/5 blur-[120px] pointer-events-none -z-10" />
+    <div className="space-y-3">
+      {/* Tab bar — only shown when both exist */}
+      {hasBoth && (
+        <div className="flex gap-2 font-display">
+          <button
+            onClick={() => setActiveTab("video")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-bold transition-all duration-200 border border-foreground/20 bg-background doodle-effect cursor-pointer ${
+              activeTab === "video"
+                ? "bg-foreground text-background border-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Play className="w-3 h-3" />
+            Gameplay Video
+          </button>
+          <button
+            onClick={() => setActiveTab("screenshots")}
+            className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all duration-200 border border-foreground/20 bg-background doodle-effect cursor-pointer ${
+              activeTab === "screenshots"
+                ? "bg-foreground text-background border-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Screenshots ({screenshots!.length})
+          </button>
+        </div>
+      )}
 
-      {/* ── Section header ──────────────────────────────────────── */}
+      {/* Video panel */}
+      {activeTab === "video" && video && (
+        <div className="relative rounded-2xl overflow-hidden border border-foreground/25 bg-background doodle-effect">
+          {getYouTubeEmbedUrl(video) ? (
+            <iframe
+              src={getYouTubeEmbedUrl(video)!}
+              className="w-full aspect-video"
+              allowFullScreen
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            />
+          ) : (
+            <video
+              src={video}
+              controls
+              className="w-full aspect-video object-cover animate-none"
+              poster="/calorie_adventure_preview.png"
+            />
+          )}
+        </div>
+      )}
+
+      {/* Screenshots panel */}
+      {activeTab === "screenshots" && screenshots && screenshots.length > 0 && (
+        <div className="space-y-3">
+          {/* Main screenshot */}
+          <div className="relative rounded-2xl overflow-hidden border border-foreground/25 bg-background doodle-effect">
+            <img
+              src={screenshots[activeScreenshot]}
+              alt={`${title} screenshot ${activeScreenshot + 1}`}
+              className="w-full aspect-video object-cover"
+            />
+            {/* Prev / Next arrows */}
+            {screenshots.length > 1 && (
+              <>
+                <button
+                  onClick={() => setActiveScreenshot((p) => (p - 1 + screenshots.length) % screenshots.length)}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-background border border-foreground/30 hover:bg-foreground hover:text-background transition-all cursor-pointer"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setActiveScreenshot((p) => (p + 1) % screenshots.length)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-1.5 rounded-full bg-background border border-foreground/30 hover:bg-foreground hover:text-background transition-all cursor-pointer"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+                {/* Dot indicators */}
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-1.5">
+                  {screenshots.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActiveScreenshot(i)}
+                      className={`w-2 h-2 rounded-full border border-foreground/45 transition-all duration-200 ${
+                        i === activeScreenshot ? "bg-foreground scale-110" : "bg-background"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Thumbnail strip */}
+          {screenshots.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+              {screenshots.map((src, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveScreenshot(i)}
+                  className={`shrink-0 w-24 aspect-video rounded-lg overflow-hidden border transition-all duration-200 cursor-pointer ${
+                    i === activeScreenshot
+                      ? "border-foreground scale-98"
+                      : "border-foreground/20 opacity-60 hover:opacity-100"
+                  }`}
+                >
+                  <img src={src} alt={`Thumbnail ${i + 1}`} className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TapeDoodle() {
+  return (
+    <div 
+      className="absolute top-[-16px] w-28 h-7 bg-amber-100/60 dark:bg-amber-950/20 border-x border-dashed border-amber-500/30 rotate-[-1.5deg] z-50 pointer-events-none doodle-effect"
+      style={{
+        boxShadow: "0 2px 4px rgba(0,0,0,0.02)",
+      }}
+    />
+  );
+}
+
+export function ProjectsSection() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedProject, setSelectedProject] = useState<(typeof PROJECTS)[0] | null>(null);
+
+  const handleSwipe = (direction: string) => {
+    setCurrentIndex((prev) => Math.min(prev + 1, PROJECTS.length));
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => Math.max(prev - 1, 0));
+  };
+
+  const handleReset = () => {
+    setCurrentIndex(0);
+  };
+
+  const getCardStyle = (idx: number) => {
+    const distance = idx - currentIndex;
+    const isSwiped = idx < currentIndex;
+    const isActive = idx === currentIndex;
+
+    if (isSwiped) {
+      const isEven = idx % 2 === 0;
+      return {
+        x: isEven ? -1000 : 1000,
+        y: 80,
+        rotate: isEven ? -30 : 30,
+        scale: 0.9,
+        opacity: 0,
+        zIndex: 0,
+        pointerEvents: "none" as const,
+      };
+    }
+
+    if (isActive) {
+      return {
+        x: 0,
+        y: 0,
+        rotate: 0,
+        scale: 1,
+        opacity: 1,
+        zIndex: 40,
+        pointerEvents: "auto" as const,
+      };
+    }
+
+    const stableRot = ((idx * 37) % 7) - 3;
+    const stableX = ((idx * 53) % 13) - 6;
+
+    return {
+      x: stableX,
+      y: distance * 12,
+      rotate: stableRot,
+      scale: 1 - distance * 0.04,
+      opacity: distance > 2 ? 0 : 1,
+      zIndex: 40 - distance,
+      pointerEvents: "none" as const,
+    };
+  };
+
+  return (
+    <section id="projects" className="py-32 overflow-hidden relative">
+      {/* Header */}
       <div className="px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
         <AnimatedSection>
-          <div className="mb-12 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
-            <div>
-              <p className="text-xs uppercase tracking-[0.25em] text-primary mb-3 font-semibold">
-                03 / Case Studies
-              </p>
-              <h3 className="text-3xl md:text-5xl font-bold tracking-tight">
-                Selected Projects
-              </h3>
-            </div>
-            <p className="text-sm text-muted-foreground font-light max-w-xs leading-relaxed">
-              Hover a card to pause — edge-hover to fast-scroll — click to explore details.
+          <div className="mb-16 text-center max-w-xl mx-auto">
+            <p className="text-sm uppercase tracking-[0.25em] text-primary mb-3 font-bold font-display">
+              03 / Case Studies
+            </p>
+            <h3 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground font-display mb-4">
+              Selected Projects
+            </h3>
+            <p className="text-sm text-muted-foreground font-light leading-relaxed">
+              Drag or swipe the top Polaroid card away to reveal the next. Tap the card to open details.
             </p>
           </div>
         </AnimatedSection>
       </div>
 
-      {/* ── Scroll strip ────────────────────────────────────────── */}
-      <AnimatedSection delay={0.15}>
-        <div className="relative">
+      <div className="max-w-4xl mx-auto px-6 relative flex flex-col items-center">
+        {/* Decorative Tape holding the stack */}
+        {currentIndex < PROJECTS.length && <TapeDoodle />}
 
-          {/* Left fade + edge zone */}
-          <div
-            className="absolute left-0 top-0 h-full w-24 z-20 flex items-center justify-start pl-4 cursor-w-resize group/left pointer-events-auto select-none"
-            style={{
-              background:
-                "linear-gradient(to right, rgba(3,0,20,0.92) 0%, rgba(3,0,20,0.4) 60%, transparent 100%)",
-            }}
-            onMouseEnter={() => { edgeRef.current = "left"; }}
-            onMouseLeave={() => { edgeRef.current = null; }}
-          >
-            <div className="opacity-0 group-hover/left:opacity-100 transition-opacity duration-200 p-2.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
-              <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M15 18l-6-6 6-6" />
-              </svg>
-            </div>
-          </div>
+        {/* Stack Container */}
+        <div className="relative w-full max-w-[420px] h-[550px] flex items-center justify-center mb-8">
+          <AnimatePresence mode="popLayout">
+            {currentIndex === PROJECTS.length ? (
+              // Empty stack placeholder
+              <motion.div
+                key="empty-state"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="doodle-card p-8 bg-card-bg/60 border border-dashed border-foreground/30 text-center flex flex-col items-center justify-center w-full h-[480px] shadow-sm select-none"
+              >
+                <div className="w-16 h-16 border-2 border-dashed border-foreground/40 rounded-full flex items-center justify-center mb-6">
+                  <svg className="w-8 h-8 text-foreground/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h4 className="font-display text-xl font-bold text-foreground mb-3">All Memories Sorted!</h4>
+                <p className="text-xs text-muted-foreground max-w-xs leading-relaxed mb-6 font-light">
+                  You've browsed through all selected projects. Click below to reload the photo stack.
+                </p>
+                <button
+                  onClick={handleReset}
+                  className="doodle-button px-6 py-3 text-sm font-bold text-foreground bg-background hover:scale-102 active:scale-98 transition-all cursor-pointer font-display"
+                >
+                  Recycle Stack ↺
+                </button>
+              </motion.div>
+            ) : (
+              PROJECTS.map((project, idx) => {
+                const isSwiped = idx < currentIndex;
+                const isActive = idx === currentIndex;
 
-          {/* Right fade + edge zone */}
-          <div
-            className="absolute right-0 top-0 h-full w-24 z-20 flex items-center justify-end pr-4 cursor-e-resize group/right pointer-events-auto select-none"
-            style={{
-              background:
-                "linear-gradient(to left, rgba(3,0,20,0.92) 0%, rgba(3,0,20,0.4) 60%, transparent 100%)",
-            }}
-            onMouseEnter={() => { edgeRef.current = "right"; }}
-            onMouseLeave={() => { edgeRef.current = null; }}
-          >
-            <div className="opacity-0 group-hover/right:opacity-100 transition-opacity duration-200 p-2.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
-              <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 18l6-6-6-6" />
-              </svg>
-            </div>
-          </div>
+                if (isSwiped || idx - currentIndex > 2) return null;
 
-          {/* Scroll container */}
-          <div
-            ref={scrollRef}
-            className="flex gap-6 overflow-x-auto pb-4 no-scrollbar"
-            style={{
-              scrollbarWidth: "none",
-              paddingLeft: "clamp(1.5rem, 6vw, 6rem)",
-              paddingRight: "clamp(1.5rem, 6vw, 6rem)",
-            }}
-          >
-            {cards.map((project, idx) => (
-              <ProjectCard
-                key={`${project.id}-${idx}`}
-                project={project}
-                onPause={() => { isPausedRef.current = true; }}
-                onResume={() => { isPausedRef.current = false; }}
-                onClick={() => setSelectedProject(project)}
-              />
-            ))}
-          </div>
+                const cardStyle = getCardStyle(idx);
+
+                return (
+                  <motion.div
+                    key={project.id}
+                    style={{
+                      position: "absolute",
+                      width: "100%",
+                      maxWidth: "380px",
+                      cursor: isActive ? "grab" : "default",
+                      transformOrigin: "center center",
+                    }}
+                    animate={cardStyle}
+                    transition={{
+                      type: "spring",
+                      stiffness: 220,
+                      damping: 24,
+                    }}
+                    drag={isActive}
+                    dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+                    dragElastic={0.65}
+                    onDragEnd={(e, info) => {
+                      if (!isActive) return;
+                      const threshold = 120;
+                      if (info.offset.x > threshold) {
+                        handleSwipe("right");
+                      } else if (info.offset.x < -threshold) {
+                        handleSwipe("left");
+                      } else if (info.offset.y < -threshold) {
+                        handleSwipe("up");
+                      }
+                    }}
+                    onTap={() => {
+                      if (isActive) setSelectedProject(project);
+                    }}
+                    whileDrag={isActive ? { cursor: "grabbing", scale: 1.02, rotate: 1 } : {}}
+                    className="doodle-card p-4 pb-14 bg-card-bg shadow-lg select-none"
+                  >
+                    {/* Polaroid Image Area */}
+                    <div className="relative aspect-[4/3] w-full overflow-hidden border border-foreground/15 bg-background mb-4 rounded-sm pointer-events-none">
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/10" />
+
+                      {/* Polaroid Index Watermark */}
+                      <span className="absolute top-2 right-3 font-display font-bold text-lg text-foreground/20">
+                        {project.id}
+                      </span>
+                    </div>
+
+                    {/* Polaroid Caption Area */}
+                    <div className="space-y-3 pointer-events-none text-left">
+                      <h4 className="font-display text-lg font-bold text-foreground tracking-tight leading-snug">
+                        {project.title}
+                      </h4>
+                      <p className="text-xs text-muted-foreground font-light leading-relaxed line-clamp-3">
+                        {project.description}
+                      </p>
+
+                      {/* Tech stack badges */}
+                      <div className="flex flex-wrap gap-1 pt-2 border-t border-foreground/10">
+                        {project.techStack.map((tech) => (
+                          <span
+                            key={tech}
+                            className="px-2 py-0.5 rounded-full border border-foreground/15 bg-background text-[9px] font-bold font-display text-muted-foreground"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Handwriting style label at the bottom */}
+                    <span className="absolute bottom-4 right-4 font-display text-[10px] text-muted-foreground/60 rotate-[-1deg] font-bold">
+                      Tap details ↗
+                    </span>
+                  </motion.div>
+                );
+              })
+            )}
+          </AnimatePresence>
         </div>
-      </AnimatedSection>
+
+        {/* Stack Navigation Controls */}
+        {currentIndex < PROJECTS.length && (
+          <div className="flex items-center gap-6 select-none font-display">
+            <button
+              onClick={handlePrev}
+              disabled={currentIndex === 0}
+              className={`p-2.5 rounded-xl border border-foreground/20 bg-background doodle-effect shadow-sm transition-all text-foreground ${
+                currentIndex === 0 ? "opacity-35 cursor-not-allowed" : "hover:scale-105 active:scale-95 cursor-pointer"
+              }`}
+              aria-label="Previous card"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            <div className="flex flex-col items-center gap-0.5 min-w-[80px]">
+              <span className="text-sm font-bold text-foreground">
+                {currentIndex + 1} of {PROJECTS.length}
+              </span>
+              <span className="text-[9px] text-muted-foreground tracking-wider uppercase font-semibold">
+                Photos
+              </span>
+            </div>
+
+            <button
+              onClick={() => handleSwipe("right")}
+              className="p-2.5 rounded-xl border border-foreground/20 bg-background doodle-effect shadow-sm hover:scale-105 active:scale-95 transition-all text-foreground cursor-pointer"
+              aria-label="Next card"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* ── Modal ───────────────────────────────────────────────── */}
       <AnimatePresence>
@@ -832,7 +1566,7 @@ export function ProjectsSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-8 bg-black/80 backdrop-blur-md"
+            className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-8 bg-background/80 backdrop-blur-sm"
             onClick={() => setSelectedProject(null)}
           >
             <motion.div
@@ -840,51 +1574,51 @@ export function ProjectsSection() {
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.96, y: 24, opacity: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="glass-card rounded-3xl w-full max-w-4xl max-h-[92vh] overflow-y-auto p-6 md:p-10 relative no-scrollbar"
+              className="doodle-card w-full max-w-4xl max-h-[92vh] overflow-y-auto p-6 md:p-10 relative no-scrollbar bg-card-bg shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close */}
               <button
                 onClick={() => setSelectedProject(null)}
-                className="absolute top-5 right-5 p-2 rounded-full border border-white/8 bg-white/5 hover:bg-white/10 text-muted-foreground hover:text-white transition-all duration-200 cursor-pointer z-10"
+                className="absolute top-5 right-5 p-2 rounded-xl border border-foreground/20 hover:border-foreground bg-background hover:scale-105 active:scale-95 text-foreground transition-all duration-200 cursor-pointer z-10 doodle-effect shadow-sm"
                 aria-label="Close"
               >
                 <X className="w-4 h-4" />
               </button>
 
               <div className="space-y-8">
-                {/* Preview image */}
-                <div
-                  className="relative aspect-video rounded-2xl overflow-hidden border border-white/5 bg-neutral-900"
-                  style={{ boxShadow: `0 0 60px -10px ${selectedProject.accent}33` }}
-                >
-                  <img
-                    src={selectedProject.image}
-                    alt={selectedProject.title}
-                    className="object-cover w-full h-full"
+                {/* ── Media ── */}
+                {(selectedProject as any).video || (selectedProject as any).screenshots ? (
+                  <MediaGallery
+                    video={(selectedProject as any).video}
+                    screenshots={(selectedProject as any).screenshots}
+                    accent={selectedProject.accent}
+                    title={selectedProject.title}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
-                  {/* Accent stripe at top */}
-                  <div
-                    className="absolute top-0 left-0 right-0 h-[2px]"
-                    style={{ background: `linear-gradient(to right, transparent, ${selectedProject.accent}, transparent)` }}
-                  />
-                </div>
+                ) : (
+                  <div className="relative aspect-video rounded-2xl overflow-hidden border border-foreground/20 bg-background doodle-effect">
+                    <img
+                      src={selectedProject.image}
+                      alt={selectedProject.title}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                   {/* Left */}
                   <div className="lg:col-span-8 space-y-7">
                     <div className="flex items-start gap-4">
-                      <span className="text-4xl font-black text-white/5 select-none leading-none mt-1">
+                      <span className="text-4xl font-black text-foreground/10 select-none leading-none mt-1 font-display">
                         {selectedProject.id}
                       </span>
-                      <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight leading-tight">
+                      <h3 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight leading-tight font-display">
                         {selectedProject.title}
                       </h3>
                     </div>
 
                     <div className="space-y-2">
-                      <h5 className="text-[10px] uppercase tracking-[0.25em] text-primary font-semibold">
+                      <h5 className="text-sm uppercase tracking-[0.25em] text-primary font-bold font-display">
                         Overview
                       </h5>
                       <p className="text-muted-foreground leading-relaxed font-light text-sm md:text-base">
@@ -893,16 +1627,16 @@ export function ProjectsSection() {
                     </div>
 
                     <div className="space-y-3">
-                      <h5 className="text-[10px] uppercase tracking-[0.25em] text-primary font-semibold">
+                      <h5 className="text-sm uppercase tracking-[0.25em] text-primary font-bold font-display">
                         Key Features
                       </h5>
                       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {selectedProject.details.features.map((feat, i) => (
                           <li
                             key={i}
-                            className="flex gap-3 text-sm text-neutral-300 font-light leading-relaxed p-4 rounded-xl border border-white/5 bg-white/[0.015]"
+                            className="flex gap-3 text-sm text-foreground/80 font-bold leading-relaxed p-4 rounded-xl border border-foreground/15 bg-background doodle-effect font-display"
                           >
-                            <span style={{ color: selectedProject.accent }} className="font-bold shrink-0 mt-0.5">✓</span>
+                            <span className="font-bold text-foreground shrink-0 mt-0.5">✓</span>
                             <span>{feat}</span>
                           </li>
                         ))}
@@ -911,16 +1645,16 @@ export function ProjectsSection() {
                   </div>
 
                   {/* Right sidebar */}
-                  <div className="lg:col-span-4 space-y-7 lg:pl-8 lg:border-l border-white/5">
+                  <div className="lg:col-span-4 space-y-7 lg:pl-8 lg:border-l border-foreground/10">
                     <div>
-                      <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground block mb-3 font-semibold">
+                      <span className="text-sm uppercase tracking-[0.25em] text-muted-foreground block mb-3 font-bold font-display">
                         Technologies
                       </span>
                       <div className="flex flex-wrap gap-2">
                         {selectedProject.techStack.map((tech) => (
                           <span
                             key={tech}
-                            className="px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/5 text-neutral-300 text-xs font-light"
+                            className="px-3 py-1.5 rounded-full bg-background border border-foreground/20 text-foreground text-xs font-bold font-display doodle-effect"
                           >
                             {tech}
                           </span>
@@ -928,8 +1662,8 @@ export function ProjectsSection() {
                       </div>
                     </div>
 
-                    <div className="space-y-3 pt-6 border-t border-white/5">
-                      <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground block font-semibold">
+                    <div className="space-y-3 pt-6 border-t border-foreground/10">
+                      <span className="text-sm uppercase tracking-[0.25em] text-muted-foreground block font-bold font-display">
                         Links
                       </span>
                       <div className="flex flex-col gap-2.5">
@@ -937,21 +1671,21 @@ export function ProjectsSection() {
                           href={selectedProject.github}
                           target="_blank"
                           rel="noreferrer"
-                          className="flex items-center gap-3 text-sm text-neutral-300 hover:text-white transition-colors py-2.5 px-4 rounded-xl border border-white/5 hover:border-white/10 bg-white/[0.01] hover:bg-white/[0.025] group/link"
+                          className="flex items-center gap-3 text-sm text-neutral-500 hover:text-foreground transition-colors py-2.5 px-4 rounded-xl border border-foreground/15 hover:border-foreground bg-background hover:bg-foreground/5 group/link doodle-effect"
                         >
                           <svg className="w-4 h-4 text-muted-foreground shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
                             <path d="M9 18c-4.51 2-5-2-7-2" />
                           </svg>
-                          <span>GitHub Repository</span>
+                          <span className="font-display font-bold">GitHub Repository</span>
                           <ArrowUpRight className="w-3.5 h-3.5 ml-auto opacity-0 group-hover/link:opacity-100 transition-opacity" />
                         </a>
                         <a
                           href={selectedProject.live}
-                          className="flex items-center gap-3 text-sm text-neutral-300 hover:text-white transition-colors py-2.5 px-4 rounded-xl border border-white/5 hover:border-white/10 bg-white/[0.01] hover:bg-white/[0.025] group/link"
+                          className="flex items-center gap-3 text-sm text-neutral-500 hover:text-foreground transition-colors py-2.5 px-4 rounded-xl border border-foreground/15 hover:border-foreground bg-background hover:bg-foreground/5 group/link doodle-effect"
                         >
                           <Globe className="w-4 h-4 text-muted-foreground shrink-0" />
-                          <span>Live Demo</span>
+                          <span className="font-display font-bold">Live Demo</span>
                           <ArrowUpRight className="w-3.5 h-3.5 ml-auto opacity-0 group-hover/link:opacity-100 transition-opacity" />
                         </a>
                       </div>
@@ -967,174 +1701,103 @@ export function ProjectsSection() {
   );
 }
 
-/* ─── Individual project card ────────────────────────────────────── */
-interface CardProps {
-  project: (typeof PROJECTS)[0];
-  onPause: () => void;
-  onResume: () => void;
-  onClick: () => void;
-}
-
-function ProjectCard({ project, onPause, onResume, onClick }: CardProps) {
-  return (
-    <div
-      onClick={onClick}
-      onMouseEnter={onPause}
-      onMouseLeave={onResume}
-      className="
-        shrink-0 relative
-        w-[88vw] sm:w-[70vw] md:w-[55vw] lg:w-[44vw] xl:w-[38vw]
-        min-w-[280px] max-w-[720px]
-        rounded-2xl
-        border border-white/5
-        bg-white/[0.012]
-        hover:bg-white/[0.022]
-        hover:border-white/10
-        transition-all duration-500
-        cursor-pointer
-        overflow-hidden
-        group
-        flex flex-col
-      "
-      style={{
-        boxShadow: "0 4px 30px rgba(0,0,0,0.3)",
-      }}
-      onMouseOver={(e) => {
-        (e.currentTarget as HTMLDivElement).style.boxShadow =
-          `0 8px 50px rgba(0,0,0,0.4), 0 0 40px -10px ${project.accent}44`;
-      }}
-      onMouseOut={(e) => {
-        (e.currentTarget as HTMLDivElement).style.boxShadow =
-          "0 4px 30px rgba(0,0,0,0.3)";
-      }}
-    >
-      {/* Accent top line */}
-      <div
-        className="h-[1.5px] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        style={{ background: `linear-gradient(to right, transparent, ${project.accent}cc, transparent)` }}
-      />
-
-      {/* Image */}
-      <div className="relative aspect-video overflow-hidden border-b border-white/5">
-        <img
-          src={project.image}
-          alt={project.title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-
-        {/* ID watermark */}
-        <span className="absolute top-4 right-5 text-5xl font-black text-white/[0.06] group-hover:text-white/[0.10] transition-colors select-none leading-none pointer-events-none">
-          {project.id}
-        </span>
-
-        {/* View details pill (shows on hover) */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <span className="px-4 py-2 rounded-full bg-black/60 border border-white/10 text-xs font-semibold tracking-wider text-white uppercase backdrop-blur-sm scale-90 group-hover:scale-100 transition-transform duration-300">
-            View Details
-          </span>
-        </div>
-      </div>
-
-      {/* Card body */}
-      <div className="flex flex-col gap-5 p-6 flex-1">
-        {/* Title + description */}
-        <div className="space-y-2 flex-1">
-          <h4
-            className="text-base md:text-lg font-bold text-white leading-snug transition-colors duration-300"
-            style={{ color: undefined }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = project.accent;
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "";
-            }}
-          >
-            {project.title}
-          </h4>
-          <p className="text-sm text-muted-foreground font-light leading-relaxed line-clamp-3">
-            {project.description}
-          </p>
-        </div>
-
-        {/* Key achievement */}
-        <div
-          className="rounded-xl px-4 py-3 text-xs font-light leading-relaxed text-neutral-300 border border-white/5 bg-white/[0.008]"
-          style={{ borderLeft: `2px solid ${project.accent}55` }}
-        >
-          <span
-            className="text-[9px] uppercase tracking-[0.2em] font-semibold block mb-1"
-            style={{ color: project.accent }}
-          >
-            Key Achievement
-          </span>
-          {project.highlights}
-        </div>
-
-        {/* Tech stack */}
-        <div className="flex flex-wrap gap-1.5 pt-3 border-t border-white/5">
-          {project.techStack.map((tech) => (
-            <span
-              key={tech}
-              className="px-2.5 py-1 rounded-full bg-white/[0.025] border border-white/5 text-neutral-400 text-[10px] font-light tracking-wide"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 ================================================================================
 FILE: components/sections/SkillsSection.tsx
 ================================================================================
 "use client";
 
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
+import { DoodleSearch, DoodleStar } from "@/components/ui/DoodleIcons";
+import { motion } from "framer-motion";
 
 const SKILL_CATEGORIES = [
   {
-    name: "Programming",
-    items: ["Python", "TypeScript", "Go", "SQL", "JavaScript", "C++"]
+    name: "Languages & Markup",
+    items: ["JavaScript", "TypeScript", "Python", "Java", "C", "C++", "SQL", "HTML", "CSS"]
   },
   {
-    name: "Systems & Architecture",
-    items: ["Node.js", "Flask", "Next.js", "RESTful APIs", "Microservices", "System Design"]
+    name: "Backend & Frameworks",
+    items: ["Node.js", "Express.js", "FastAPI", "NestJS", "SQLAlchemy", "MERN Stack", "Next.js"]
   },
   {
-    name: "Data & Operations",
-    items: ["PostgreSQL", "Redis", "SQLAlchemy", "Docker", "Git", "Linux & Bash"]
+    name: "Databases & ORM",
+    items: ["PostgreSQL", "MySQL", "MongoDB", "Oracle DB", "Mongoose", "Alembic"]
   },
   {
-    name: "AI & Machine Learning",
-    items: ["Predictive Modeling", "Data Pipelines", "Model Integration", "Pandas", "Scikit-Learn"]
+    name: "Auth & Security",
+    items: ["JWT", "OAuth2", "bcrypt", "Role-Based Access Control", "Rate Limiting"]
+  },
+  {
+    name: "Cloud & DevOps",
+    items: ["AWS", "EC2", "S3", "Lambda", "DynamoDB", "SNS", "SQS", "API Gateway", "Docker", "Nginx", "Celery/Redis"]
+  },
+  {
+    name: "Tools & Utilities",
+    items: ["Git", "GitHub", "Postman", "Supabase", "Cloudinary", "APScheduler"]
   }
 ];
 
+function SpiralRings() {
+  return (
+    <div className="absolute -top-3.5 left-6 right-6 flex justify-between pointer-events-none z-20">
+      {[...Array(6)].map((_, i) => (
+        <svg key={i} width="10" height="20" viewBox="0 0 10 20" fill="none" className="text-foreground/80">
+          <path 
+            d="M5 2 C2 2, 1.5 5, 1.5 9 C1.5 14, 8.5 17, 8.5 10 C8.5 3, 5 2, 5 2" 
+            stroke="currentColor" 
+            strokeWidth="2.2" 
+            strokeLinecap="round" 
+          />
+        </svg>
+      ))}
+    </div>
+  );
+}
+
 export function SkillsSection() {
   return (
-    <section id="skills" className="py-32 px-6 md:px-12 lg:px-24 border-y border-white/5 bg-white/[0.01]">
-      <div className="max-w-7xl mx-auto">
-        <AnimatedSection>
-          <h2 className="text-xs uppercase tracking-[0.25em] text-primary mb-4 font-semibold">02 / Toolkit</h2>
-          <h3 className="text-3xl md:text-5xl font-bold mb-16 tracking-tight">Core Competencies</h3>
-        </AnimatedSection>
+    <section id="skills" className="py-32 px-6 md:px-12 lg:px-24 border-y-2 border-foreground/30 bg-card-bg/15 relative overflow-hidden">
+      {/* Background doodle star */}
+      <motion.div
+        animate={{ rotate: [0, -360] }}
+        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+        className="absolute bottom-12 right-12 opacity-35 pointer-events-none"
+      >
+        <DoodleStar size={36} />
+      </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+          <AnimatedSection>
+            <h2 className="text-sm uppercase tracking-[0.25em] text-primary mb-4 font-bold font-display">02 / Toolkit</h2>
+            <h3 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground font-display">Core Competencies</h3>
+          </AnimatedSection>
+          
+          {/* Custom Search bar decoration from the reference image */}
+          <AnimatedSection delay={0.2} className="w-full max-w-[260px] self-start md:self-auto">
+            <DoodleSearch />
+          </AnimatedSection>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {SKILL_CATEGORIES.map((category, index) => (
-            <AnimatedSection key={category.name} delay={index * 0.1}>
-              <div className="h-full rounded-2xl border border-white/5 bg-background/50 p-6 hover:border-white/10 transition-all duration-300">
-                <h4 className="text-base font-semibold text-white mb-6 pb-3 border-b border-white/5">
+            <AnimatedSection key={category.name} delay={index * 0.08}>
+              <div className="h-full doodle-card p-6 pt-8 relative group">
+                {/* Spiral notebook rings */}
+                <SpiralRings />
+
+                {/* Diagonal hatch details on hover */}
+                <div className="absolute inset-0 hatch-bg opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none" />
+
+                <h4 className="text-xl font-bold text-foreground mb-6 pb-3 border-b-2 border-dashed border-foreground/15 font-display relative z-10">
                   {category.name}
                 </h4>
-                <div className="flex flex-wrap gap-2.5">
+                
+                <div className="flex flex-wrap gap-2.5 relative z-10">
                   {category.items.map((item) => (
                     <span 
                       key={item} 
-                      className="px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/[0.02] hover:bg-white/[0.04] border border-white/5 hover:border-primary/20 text-muted-foreground hover:text-white transition-all duration-300 cursor-default"
+                      className="px-3 py-1.5 rounded-full text-xs font-bold bg-background hover:bg-foreground/5 border-[1.8px] border-foreground/30 hover:border-foreground text-muted-foreground hover:text-foreground transition-all duration-200 cursor-default doodle-effect font-display"
                     >
                       {item}
                     </span>
@@ -1181,6 +1844,527 @@ export function AnimatedSection({ children, className, delay = 0 }: AnimatedSect
 
 
 ================================================================================
+FILE: components/ui/DoodleIcons.tsx
+================================================================================
+"use client";
+
+import React from "react";
+import { motion } from "framer-motion";
+
+interface DoodleProps extends React.SVGProps<SVGSVGElement> {
+  className?: string;
+  size?: number;
+}
+
+// 1. Floating Wobbly Star
+export function DoodleStar({ className = "", size = 28, ...props }: DoodleProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`text-foreground ${className}`}
+      {...props}
+    >
+      <path
+        d="M12 2.5 
+           L14.7 8.3 
+           L21.2 8.9 
+           L16.2 13.2 
+           L17.8 19.5 
+           L12 16.2 
+           L6.2 19.5 
+           L7.8 13.2 
+           L2.8 8.9 
+           L9.3 8.3 
+           Z"
+      />
+      {/* Small extra sketch lines around the star */}
+      <path d="M4 4.5 L4.5 4" strokeWidth="1.5" />
+      <path d="M20 5 L19.5 5.5" strokeWidth="1.5" />
+      <path d="M3 18 L4 17.5" strokeWidth="1.5" />
+      <path d="M21 17.5 L20.5 17" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+// 2. Wobbly Cloud
+export function DoodleCloud({ className = "", size = 48, arrow = false, ...props }: DoodleProps & { arrow?: "up" | "down" | boolean }) {
+  return (
+    <svg
+      width={size}
+      height={size * 0.75}
+      viewBox="0 0 48 36"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`text-foreground ${className}`}
+      {...props}
+    >
+      {/* Hand-drawn wobbly cloud outline */}
+      <path
+        d="M12 28 
+           C8 28, 4 25, 4 20 
+           C4 16, 7 13, 11 12 
+           C12 7, 18 4, 24 4 
+           C30 4, 35 7, 36 12 
+           C41 13, 44 16, 44 20 
+           C44 25, 40 28, 36 28 
+           L12 28 Z"
+      />
+      {/* Hatch shading lines inside the cloud */}
+      <path d="M12 24 L16 20" strokeWidth="1.5" strokeDasharray="1 1" />
+      <path d="M18 24 L22 20" strokeWidth="1.5" strokeDasharray="1 1" />
+      <path d="M30 24 L34 20" strokeWidth="1.5" strokeDasharray="1 1" />
+      <path d="M36 24 L39 20" strokeWidth="1.5" strokeDasharray="1 1" />
+      
+      {/* Optional arrow inside cloud like the image */}
+      {arrow === "down" && (
+        <path d="M24 12 L24 24 M20 20 L24 24 L28 20" strokeWidth="2.5" />
+      )}
+      {arrow === "up" && (
+        <path d="M24 24 L24 12 M20 16 L24 12 L28 16" strokeWidth="2.5" />
+      )}
+    </svg>
+  );
+}
+
+// 3. Speech Bubble with "hi!" or children text
+export function DoodleSpeechBubble({ className = "", text = "hi!", size = 52, ...props }: DoodleProps & { text?: string }) {
+  return (
+    <div className={`relative flex items-center justify-center ${className}`}>
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 48 48"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="text-foreground"
+        {...props}
+      >
+        <path
+          d="M8 32 
+             C4 28, 4 20, 9 14 
+             C14 8, 26 6, 34 10 
+             C42 14, 44 24, 40 31 
+             C36 38, 26 40, 18 39 
+             C15 41, 11 43, 6 44 
+             C7 41, 8 36, 8 32 
+             Z"
+          fill="var(--card-bg)"
+        />
+        {/* Draw the little accent lines */}
+        <path d="M41 12 L43 10" strokeWidth="1.5" />
+        <path d="M43 15 L45 15" strokeWidth="1.5" />
+      </svg>
+      <span
+        className="absolute font-heading font-bold text-foreground pointer-events-none"
+        style={{
+          fontSize: `${size * 0.3}px`,
+          transform: "rotate(-4deg) translateY(-2px)",
+        }}
+      >
+        {text}
+      </span>
+    </div>
+  );
+}
+
+// 4. Custom wobbly browser container (polaroid style or webpage style)
+export function DoodleBrowser({
+  children,
+  title = "WWW",
+  className = "",
+  innerClassName = "",
+}: {
+  children?: React.ReactNode;
+  title?: string;
+  className?: string;
+  innerClassName?: string;
+}) {
+  return (
+    <div className={`relative bg-card-bg border-[2.5px] border-foreground rounded-[25px_10px_20px_10px/10px_20px_10px_25px] shadow-[4px_5px_0_0_currentColor] filter url(#doodle-border-filter) ${className}`}>
+      {/* Top Browser Bar */}
+      <div className="flex items-center justify-between border-b-[2px] border-foreground px-4 py-2 bg-foreground/5">
+        <div className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full border-[1.5px] border-foreground" />
+          <span className="w-2.5 h-2.5 rounded-full border-[1.5px] border-foreground" />
+          <span className="w-2.5 h-2.5 rounded-full border-[1.5px] border-foreground" />
+        </div>
+        
+        {/* URL Bar */}
+        <div className="flex-1 max-w-[55%] mx-auto border-[1.5px] border-foreground rounded-[100px_4px_100px_4px/4px_100px_4px_100px] px-2 py-0.5 text-[10px] text-center font-mono truncate bg-background/50">
+          {title}
+        </div>
+        
+        <div className="w-8 flex justify-end">
+          <span className="w-3.5 h-3.5 border-[1.5px] border-foreground rounded-sm flex items-center justify-center font-bold text-[8px] select-none">
+            ✕
+          </span>
+        </div>
+      </div>
+      
+      {/* Window Body */}
+      {children && (
+        <div className={`p-4 ${innerClassName}`}>
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 5. Custom wobbly monitor container
+export function DoodleMonitor({
+  children,
+  className = "",
+  innerClassName = "",
+}: {
+  children?: React.ReactNode;
+  className?: string;
+  innerClassName?: string;
+}) {
+  return (
+    <div className={`flex flex-col items-center select-none ${className}`}>
+      {/* Monitor Screen Frame */}
+      <div className="relative w-full bg-card-bg border-[3px] border-foreground rounded-[30px_15px_25px_15px/15px_25px_15px_30px] p-5 shadow-[4px_5px_0_0_currentColor] filter url(#doodle-border-filter) z-10">
+        {/* Top 3 dots */}
+        <div className="absolute top-2.5 left-4 flex gap-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-foreground" />
+          <span className="w-1.5 h-1.5 rounded-full bg-foreground" />
+          <span className="w-1.5 h-1.5 rounded-full bg-foreground" />
+        </div>
+        
+        {/* Screen Content Wrapper */}
+        {children && (
+          <div className={`w-full overflow-hidden min-h-[160px] rounded-lg ${innerClassName}`}>
+            {children}
+          </div>
+        )}
+      </div>
+      
+      {/* Monitor Neck & Base */}
+      <div className="relative flex flex-col items-center mt-[-3px] w-full max-w-[200px] pointer-events-none">
+        {/* Neck */}
+        <div className="w-10 h-7 border-x-[2.5px] border-foreground bg-card-bg shadow-[2px_0_0_0_currentColor]" />
+        
+        {/* Base */}
+        <div className="w-36 h-3 border-[2.5px] border-foreground bg-card-bg rounded-[80px_15px_80px_15px/15px_80px_15px_80px] shadow-[2px_2px_0_0_currentColor]" />
+      </div>
+    </div>
+  );
+}
+
+// 6. Megaphone / Speaker Doodle
+export function DoodleMegaphone({ className = "", size = 32, ...props }: DoodleProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`text-foreground ${className}`}
+      {...props}
+    >
+      <path
+        d="M3 8.5 
+           L7 8.5 
+           L13 4 
+           L13 20 
+           L7 15.5 
+           L3 15.5 
+           Z"
+        fill="var(--card-bg)"
+      />
+      {/* Handle */}
+      <path d="M9 15.5 L9 18.5 C9 19, 8 19.5, 7.5 19.5 C7 19.5, 7.5 18.5, 7.5 18.5" />
+      {/* Sound waves */}
+      <path d="M17 9 C18 10.5, 18 13.5, 17 15" />
+      <path d="M20 7 C22 9.5, 22 14.5, 20 17" />
+    </svg>
+  );
+}
+
+// 7. Security Shield / Lock Doodle
+export function DoodleShield({ className = "", size = 36, ...props }: DoodleProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`text-foreground ${className}`}
+      {...props}
+    >
+      <path
+        d="M12 2.5 
+           C16 2.5, 20 4.5, 20 4.5
+           L20 11.5
+           C20 17, 16.5 20, 12 21.5
+           C7.5 20, 4 17, 4 11.5
+           L4 4.5
+           C4 4.5, 8 2.5, 12 2.5 
+           Z"
+        fill="var(--card-bg)"
+      />
+      {/* Keyhole/lock inside */}
+      <circle cx="12" cy="10.5" r="2.5" />
+      <path d="M12 13 L12 16.5 M10.5 16.5 L13.5 16.5" />
+    </svg>
+  );
+}
+
+// 8. Light Bulb Doodle
+export function DoodleLightBulb({ className = "", size = 32, ...props }: DoodleProps) {
+  return (
+    <svg
+      width={size}
+      height={size * 1.1}
+      viewBox="0 0 24 28"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`text-foreground ${className}`}
+      {...props}
+    >
+      {/* Bulb body */}
+      <path
+        d="M12 3 
+           C6.5 3, 4.5 7, 4.5 11.5 
+           C4.5 15, 7.5 17.5, 8.5 19.5 
+           L8.5 22 
+           L15.5 22 
+           L15.5 19.5 
+           C16.5 17.5, 19.5 15, 19.5 11.5 
+           C19.5 7, 17.5 3, 12 3 
+           Z"
+        fill="var(--card-bg)"
+      />
+      {/* Screw base */}
+      <path d="M9 22 L15 22" />
+      <path d="M9.5 24.5 L14.5 24.5" />
+      <path d="M10.5 26.5 L13.5 26.5" />
+      {/* Filament */}
+      <path d="M9.5 14 C10 10.5, 14 10.5, 14.5 14" />
+      {/* Rays */}
+      <path d="M2.5 11.5 L0.5 11.5" strokeWidth="1.5" />
+      <path d="M21.5 11.5 L23.5 11.5" strokeWidth="1.5" />
+      <path d="M5.5 5 L3.5 3.5" strokeWidth="1.5" />
+      <path d="M18.5 5 L20.5 3.5" strokeWidth="1.5" />
+      <path d="M5.5 18 L3.5 19.5" strokeWidth="1.5" />
+      <path d="M18.5 18 L20.5 19.5" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+// 9. Hourglass / Timer Doodle
+export function DoodleHourglass({ className = "", size = 32, ...props }: DoodleProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`text-foreground ${className}`}
+      {...props}
+    >
+      {/* Top and bottom bars */}
+      <path d="M3.5 2.5 L20.5 2.5" />
+      <path d="M3.5 21.5 L20.5 21.5" />
+      {/* Glass Body */}
+      <path
+        d="M5 2.5 
+           L5 6 
+           C5 9.5, 10 11.5, 11.5 12 
+           C10 12.5, 5 14.5, 5 18 
+           L5 21.5 
+           L19 21.5 
+           L19 18 
+           C19 14.5, 14 12.5, 12.5 12 
+           C14 11.5, 19 9.5, 19 6 
+           L19 2.5 
+           Z"
+        fill="var(--card-bg)"
+      />
+      {/* Sand */}
+      <path d="M7 5.5 L17 5.5" strokeWidth="1.5" />
+      <path d="M9 7.5 L15 7.5" strokeWidth="1.5" />
+      <path d="M8 19 L16 19 M9 17.5 L15 17.5 M11.5 14 L12.5 14" strokeWidth="1.5" />
+      {/* Falling sand stream */}
+      <path d="M12 11.5 L12 16" strokeWidth="1.5" strokeDasharray="1.5 1.5" />
+    </svg>
+  );
+}
+
+// 10. Bell Doodle
+export function DoodleBell({ className = "", size = 32, ...props }: DoodleProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`text-foreground ${className}`}
+      {...props}
+    >
+      <path
+        d="M12 3 
+           C7.5 3, 5.5 6, 5.5 11 
+           L5.5 16 
+           C5.5 17.5, 4 18, 3 18 
+           L21 18 
+           C20 18, 18.5 17.5, 18.5 16 
+           L18.5 11 
+           C18.5 6, 16.5 3, 12 3 
+           Z"
+        fill="var(--card-bg)"
+      />
+      {/* Clapper */}
+      <path d="M10 18.5 C10 19.5, 11 21.5, 12 21.5 C13 21.5, 14 19.5, 14 18.5" />
+      {/* Ringing waves */}
+      <path d="M3.5 6 C2.5 8, 2.5 10, 3.5 12" strokeWidth="1.5" />
+      <path d="M20.5 6 C21.5 8, 21.5 10, 20.5 12" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+// 11. Hand Pointer / Arrow
+export function DoodleArrow({ className = "", size = 32, direction = "right", ...props }: DoodleProps & { direction?: "right" | "left" | "down" | "up" }) {
+  const getRotation = () => {
+    switch (direction) {
+      case "left":
+        return "rotate(180deg)";
+      case "down":
+        return "rotate(90deg)";
+      case "up":
+        return "rotate(-90deg)";
+      default:
+        return "rotate(0deg)";
+    }
+  };
+
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`text-foreground ${className}`}
+      style={{ transform: getRotation() }}
+      {...props}
+    >
+      <path d="M3 12 L21 12" />
+      <path d="M14 5 L21 12 L14 19" />
+      {/* Sketchy double arrow lines */}
+      <path d="M12 7 L17 12 L12 17" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+// 12. Notebook Lined Page Tear Decoration
+export function DoodleTape({ className = "", text = "", ...props }: { className?: string; text?: string }) {
+  return (
+    <div
+      className={`absolute w-28 h-6 bg-amber-100/60 dark:bg-amber-950/20 border-x border-dashed border-amber-500/30 rotate-[-1.5deg] z-10 pointer-events-none filter url(#doodle-border-filter) flex items-center justify-center ${className}`}
+      style={{
+        boxShadow: "0 2px 4px rgba(0,0,0,0.02)",
+      }}
+    >
+      {text && <span className="font-heading text-[9px] text-amber-900/60 dark:text-amber-100/40 select-none">{text}</span>}
+    </div>
+  );
+}
+
+// 13. Bookmark Doodle
+export function DoodleBookmark({ className = "", size = 32, ...props }: DoodleProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`text-foreground ${className}`}
+      {...props}
+    >
+      <path
+        d="M6 3 
+           L18 3 
+           C18 3, 18 19, 18 20.5 
+           L12 16 
+           L6 20.5 
+           C6 19, 6 3, 6 3 
+           Z"
+        fill="var(--card-bg)"
+      />
+      {/* Small hatch lines on top corner */}
+      <path d="M8 6 L12 6" strokeWidth="1.5" />
+      <path d="M8 9 L15 9" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+// 14. Search Bar Decoration
+export function DoodleSearch({ className = "", size = 20, ...props }: DoodleProps) {
+  return (
+    <div className={`flex items-center gap-2 border-[2.2px] border-foreground rounded-[100px_10px_90px_8px/8px_80px_10px_100px] px-3.5 py-1.5 bg-card-bg filter url(#doodle-border-filter) ${className}`}>
+      <span className="font-heading text-xs tracking-wider text-muted-foreground select-none uppercase">Search...</span>
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="text-foreground ml-auto"
+        {...props}
+      >
+        <circle cx="11" cy="11" r="6" />
+        <path d="M16 16 L21 21" />
+      </svg>
+    </div>
+  );
+}
+
+
+================================================================================
 FILE: components/ui/MouseGlow.tsx
 ================================================================================
 "use client";
@@ -1189,16 +2373,16 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export function MouseGlow({ className }: { className?: string }) {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
     const handleMouseMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
+      document.documentElement.style.setProperty("--mouse-x", `${e.clientX}px`);
+      document.documentElement.style.setProperty("--mouse-y", `${e.clientY}px`);
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
@@ -1211,11 +2395,12 @@ export function MouseGlow({ className }: { className?: string }) {
         className
       )}
       style={{
-        background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(99, 102, 241, 0.07) 0%, rgba(168, 85, 247, 0.03) 50%, transparent 80%)`,
+        background: `radial-gradient(600px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), color-mix(in srgb, var(--foreground) 4%, transparent) 0%, transparent 80%)`,
       }}
     />
   );
 }
+
 
 
 ================================================================================
@@ -1226,6 +2411,8 @@ FILE: components/ui/Navbar.tsx
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowUpRight } from "lucide-react";
+import { useTheme } from "next-themes";
+import { DoodleLightBulb } from "@/components/ui/DoodleIcons";
 
 const NAV_ITEMS = [
   { name: "About", href: "#about" },
@@ -1239,6 +2426,12 @@ const NAV_ITEMS = [
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -1258,11 +2451,9 @@ export function Navbar() {
       }`}
     >
       <div className="max-w-6xl mx-auto px-4">
-        <div className="relative flex items-center justify-between px-6 py-3 rounded-full border border-white/5 bg-background/30 backdrop-blur-xl shadow-2xl transition-all">
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/5 to-secondary/5 opacity-50 pointer-events-none" />
-          
-          <a href="#" className="relative z-10 text-sm font-light tracking-[0.25em] text-white uppercase hover:opacity-80 transition-opacity">
-            Ayesha <span className="font-semibold text-primary">Mashiat</span>
+        <div className="relative flex items-center justify-between px-6 py-2.5 doodle-card shadow-sm transition-all">
+          <a href="#" className="relative z-10 text-xl font-bold tracking-wide text-foreground hover:opacity-80 transition-opacity font-display">
+            Ayesha <span className="font-semibold text-primary underline decoration-wavy">Mashiat</span>
           </a>
 
           {/* Desktop Nav */}
@@ -1271,30 +2462,50 @@ export function Navbar() {
               <a
                 key={item.name}
                 href={item.href}
-                className="text-xs font-medium text-muted-foreground hover:text-white uppercase tracking-widest transition-colors duration-200"
+                className="text-base font-bold text-muted-foreground hover:text-foreground uppercase tracking-wider transition-all duration-200 font-display hover:underline hover:decoration-wavy hover:underline-offset-4 hover:decoration-2"
               >
                 {item.name}
               </a>
             ))}
           </nav>
 
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-4">
+            {mounted && (
+              <button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="relative z-10 p-2 text-muted-foreground hover:text-foreground transition-all rounded-xl border-2 border-foreground/30 hover:border-foreground bg-background doodle-effect cursor-pointer"
+                aria-label="Toggle theme"
+              >
+                <DoodleLightBulb size={15} className={theme === "light" ? "fill-foreground text-foreground" : "text-muted-foreground"} />
+              </button>
+            )}
             <a
               href="#contact"
-              className="inline-flex items-center gap-1 text-xs font-medium uppercase tracking-widest text-white hover:text-primary transition-colors duration-200"
+              className="doodle-button inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-foreground hover:scale-102 active:scale-98 transition-all duration-200 font-display"
             >
               <span>Let's talk</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden relative z-10 p-1 text-muted-foreground hover:text-white transition-colors"
-          >
-            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          {/* Mobile Menu & Theme Button */}
+          <div className="md:hidden flex items-center gap-3 relative z-10">
+            {mounted && (
+              <button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="p-1.5 text-muted-foreground hover:text-foreground transition-all rounded-xl border-2 border-foreground/30 bg-background doodle-effect cursor-pointer"
+                aria-label="Toggle theme"
+              >
+                <DoodleLightBulb size={14} className={theme === "light" ? "fill-foreground text-foreground" : "text-muted-foreground"} />
+              </button>
+            )}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-1 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            >
+              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -1306,7 +2517,7 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="absolute top-full left-0 right-0 mx-4 mt-2 p-6 rounded-3xl border border-white/5 bg-[#030014]/95 backdrop-blur-2xl shadow-3xl md:hidden"
+            className="absolute top-full left-0 right-0 mx-4 mt-2 p-6 doodle-card shadow-lg md:hidden"
           >
             <nav className="flex flex-col gap-6">
               {NAV_ITEMS.map((item) => (
@@ -1314,16 +2525,16 @@ export function Navbar() {
                   key={item.name}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className="text-sm font-medium text-muted-foreground hover:text-white uppercase tracking-widest transition-colors"
+                  className="text-lg font-bold text-muted-foreground hover:text-foreground uppercase tracking-wider transition-colors font-display"
                 >
                   {item.name}
                 </a>
               ))}
-              <div className="pt-4 border-t border-white/5">
+              <div className="pt-4 border-t border-foreground/10">
                 <a
                   href="#contact"
                   onClick={() => setIsOpen(false)}
-                  className="inline-flex items-center gap-2 text-sm font-medium uppercase tracking-widest text-primary hover:text-white transition-colors"
+                  className="inline-flex items-center gap-2 text-lg font-bold uppercase tracking-wider text-foreground hover:underline transition-colors font-display"
                 >
                   <span>Get in Touch</span>
                   <ArrowUpRight className="w-4 h-4" />
@@ -1372,21 +2583,21 @@ export function Preloader() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#030014] text-white"
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background text-foreground"
         >
           <div className="max-w-md w-full px-12">
             <div className="flex justify-between items-end mb-3">
-              <span className="text-sm font-light tracking-[0.2em] text-white uppercase">Ayesha Mashiat</span>
+              <span className="text-sm font-bold tracking-[0.2em] text-foreground uppercase">Ayesha Mashiat</span>
               <span className="text-xs font-mono text-muted-foreground">{progress}%</span>
             </div>
-            <div className="w-full h-[1px] bg-white/10 relative overflow-hidden">
+            <div className="w-full h-4 border-2 border-foreground bg-background rounded relative overflow-hidden doodle-effect">
               <motion.div 
-                className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary via-secondary to-accent"
+                className="absolute top-0 left-0 h-full bg-foreground"
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
               />
             </div>
-            <div className="mt-3 flex justify-between text-[10px] text-muted-foreground tracking-[0.15em] uppercase">
+            <div className="mt-3 flex justify-between text-[10px] text-muted-foreground tracking-[0.15em] uppercase font-normal">
               <span>Systems Engineering</span>
               <span>Intelligent Design</span>
             </div>
@@ -1607,7 +2818,7 @@ FILE: next-env.d.ts
 ================================================================================
 /// <reference types="next" />
 /// <reference types="next/image-types/global" />
-import "./.next/dev/types/routes.d.ts";
+import "./.next/types/routes.d.ts";
 
 // NOTE: This file should not be edited
 // see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
@@ -1619,10 +2830,17 @@ FILE: next.config.ts
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    optimizePackageImports: ["lucide-react", "framer-motion"],
+  },
+  onDemandEntries: {
+    maxInactiveAge: 60 * 1000, // 1 minute instead of 15 minutes
+    pagesBufferLength: 2,      // Buffer 2 pages max in memory
+  },
 };
 
 export default nextConfig;
+
 
 
 ================================================================================
@@ -1642,6 +2860,7 @@ FILE: package-lock.json
         "framer-motion": "^12.38.0",
         "lucide-react": "^1.16.0",
         "next": "16.2.6",
+        "next-themes": "^0.4.6",
         "react": "19.2.4",
         "react-dom": "19.2.4",
         "tailwind-merge": "^3.6.0"
@@ -6720,6 +7939,16 @@ FILE: package-lock.json
         }
       }
     },
+    "node_modules/next-themes": {
+      "version": "0.4.6",
+      "resolved": "https://registry.npmjs.org/next-themes/-/next-themes-0.4.6.tgz",
+      "integrity": "sha512-pZvgD5L0IEvX5/9GWyHMf3m8BKiVQwsCMHfoFosXtXBMnaS0ZnIJ9ST4b4NqLVKDEm8QBxoNNGNaBv2JNF6XNA==",
+      "license": "MIT",
+      "peerDependencies": {
+        "react": "^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc",
+        "react-dom": "^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc"
+      }
+    },
     "node_modules/next/node_modules/postcss": {
       "version": "8.4.31",
       "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.4.31.tgz",
@@ -8297,7 +9526,8 @@ FILE: package.json
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
+    "dev:lowmem": "NODE_OPTIONS='--max-old-space-size=2048' next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
@@ -8307,6 +9537,7 @@ FILE: package.json
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.16.0",
     "next": "16.2.6",
+    "next-themes": "^0.4.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "tailwind-merge": "^3.6.0"

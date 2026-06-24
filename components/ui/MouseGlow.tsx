@@ -4,16 +4,16 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export function MouseGlow({ className }: { className?: string }) {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
     const handleMouseMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
+      document.documentElement.style.setProperty("--mouse-x", `${e.clientX}px`);
+      document.documentElement.style.setProperty("--mouse-y", `${e.clientY}px`);
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
@@ -26,8 +26,9 @@ export function MouseGlow({ className }: { className?: string }) {
         className
       )}
       style={{
-        background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(99, 102, 241, 0.07) 0%, rgba(168, 85, 247, 0.03) 50%, transparent 80%)`,
+        background: `radial-gradient(600px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), color-mix(in srgb, var(--foreground) 4%, transparent) 0%, transparent 80%)`,
       }}
     />
   );
 }
+

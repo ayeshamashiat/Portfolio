@@ -2,62 +2,146 @@
 
 import { motion } from "framer-motion";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
-import { ArrowDown, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import {
+  DoodleStar,
+  DoodleCloud,
+  DoodleSpeechBubble,
+  DoodleMonitor,
+  DoodleArrow,
+} from "@/components/ui/DoodleIcons";
+import { TerminalText } from "@/components/ui/TerminalText";
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 overflow-hidden">
-      {/* Ambient background glow spheres */}
-      <div className="absolute top-1/4 right-0 w-[400px] h-[400px] rounded-full bg-primary/10 blur-[100px] pointer-events-none -z-10 animate-pulse" style={{ animationDuration: "8s" }} />
-      <div className="absolute bottom-1/4 -left-10 w-[350px] h-[350px] rounded-full bg-secondary/10 blur-[100px] pointer-events-none -z-10 animate-pulse" style={{ animationDuration: "12s" }} />
-      
-      <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
+    <section className="relative min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 overflow-hidden pt-24 pb-12">
+      {/* Grid Pattern */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-45 pointer-events-none" />
 
-      <div className="relative z-10 max-w-4xl mt-12">
-        <AnimatedSection delay={0.1}>
-          <div className="text-xs md:text-sm font-medium mb-6 text-primary uppercase tracking-[0.2em] flex items-center gap-3">
-            <span className="w-6 h-[1px] bg-primary"></span>
-            Ayesha Mashiat
-          </div>
-        </AnimatedSection>
-        
-        <AnimatedSection delay={0.2}>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight mb-8 leading-[1.05]">
-            I build the logic <br />
-            <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              that powers scale.
-            </span>
-          </h1>
-        </AnimatedSection>
+      {/* Floating Doodles Background */}
+      <motion.div
+        animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-28 right-24 md:right-40 opacity-70 pointer-events-none"
+      >
+        <DoodleCloud size={60} arrow="down" />
+      </motion.div>
 
-        <AnimatedSection delay={0.4}>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 leading-relaxed font-light">
-            I design and build reliable backend systems and integrate artificial intelligence to solve complex problems. Focused on performance, data integrity, and clean structures that scale effortlessly.
-          </p>
-        </AnimatedSection>
+      <motion.div
+        animate={{ rotate: [0, 360] }}
+        transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+        className="absolute top-48 left-12 md:left-24 opacity-60 pointer-events-none"
+      >
+        <DoodleStar size={24} />
+      </motion.div>
 
-        <AnimatedSection delay={0.6}>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <a 
-              href="#projects" 
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-white text-black font-semibold hover:bg-neutral-200 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-[0_8px_30px_rgba(255,255,255,0.1)]"
-            >
-              <span>Explore My Work</span>
-              <ArrowRight className="w-4 h-4" />
-            </a>
-            <a 
-              href="#contact" 
-              className="inline-flex items-center justify-center px-8 py-4 rounded-full border border-white/10 hover:border-white/30 text-white font-medium bg-white/5 hover:bg-white/10 backdrop-blur-md hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
-            >
-              <span>Get in Touch</span>
-            </a>
-          </div>
-        </AnimatedSection>
+      <motion.div
+        animate={{ y: [0, 8, 0], scale: [1, 1.08, 1] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-32 right-1/3 opacity-55 pointer-events-none"
+      >
+        <DoodleStar size={30} />
+      </motion.div>
+
+      {/* Decorative Hand-drawn symbols */}
+      <div className="absolute top-36 left-1/3 text-2xl font-heading opacity-15 rotate-[12deg] pointer-events-none select-none">
+        @
+      </div>
+      <div className="absolute bottom-40 right-16 text-3xl font-heading opacity-15 rotate-[-15deg] pointer-events-none select-none">
+        #
+      </div>
+      <div className="absolute bottom-72 left-8 text-2xl font-heading opacity-10 rotate-[25deg] pointer-events-none select-none">
+        {`{ ... }`}
       </div>
 
-      <AnimatedSection delay={1.0} className="absolute bottom-12 left-6 md:left-12 lg:left-24">
-        <a href="#about" className="flex items-center gap-2 text-xs uppercase tracking-[0.20em] text-muted-foreground hover:text-white transition-colors">
-          <ArrowDown className="w-3.5 h-3.5 animate-bounce" />
+      <div className="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        
+        {/* Left Intro Column */}
+        <div className="lg:col-span-7 space-y-8 text-left mt-8 lg:mt-0">
+          <AnimatedSection delay={0.1}>
+            <div className="text-xs md:text-sm font-bold text-primary uppercase tracking-[0.2em] flex items-center gap-3 font-display">
+              <span className="w-6 h-[2.5px] bg-primary"></span>
+              Ayesha Mashiat
+            </div>
+          </AnimatedSection>
+
+          <AnimatedSection delay={0.2} className="relative">
+            {/* Float 'hi!' Speech Bubble near name */}
+            <motion.div
+              animate={{ y: [0, -6, 0], rotate: [-8, -4, -8] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -top-12 left-52 md:left-72 z-20 pointer-events-none"
+            >
+              <DoodleSpeechBubble text="hi!" size={50} />
+            </motion.div>
+
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight mb-4 leading-[1.05] text-foreground">
+              Ayesha <span className="underline decoration-wavy decoration-3">Mashiat</span>
+            </h1>
+            <p className="text-xl md:text-2xl font-bold text-foreground leading-relaxed font-display mt-4">
+              Backend Developer & Software Engineering Student
+            </p>
+          </AnimatedSection>
+
+          <AnimatedSection delay={0.4}>
+            <p className="text-base md:text-lg text-muted-foreground max-w-2xl leading-relaxed font-light">
+              Third-year Software Engineering student at IUT. By day, I study databases and system architecture; by night, I build robust, scalable REST APIs, secure authentication systems, and LLM/RAG AI tools that survive production pressure. Driven by warm tea and a curiosity for how complex systems stay online.
+            </p>
+          </AnimatedSection>
+
+          <AnimatedSection delay={0.6}>
+            <div className="flex flex-wrap gap-4 items-center">
+              <a
+                href="#projects"
+                className="doodle-button inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-foreground font-bold hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 font-display text-base cursor-pointer"
+              >
+                <span>Explore My Work</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
+              <a
+                href="#contact"
+                className="doodle-button inline-flex items-center justify-center px-6 py-3.5 text-foreground font-bold hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 font-display text-base cursor-pointer"
+              >
+                <span>Get in Touch</span>
+              </a>
+            </div>
+          </AnimatedSection>
+        </div>
+
+        {/* Right Terminal Column */}
+        <div className="lg:col-span-5 flex justify-center w-full relative z-10">
+          <AnimatedSection delay={0.5} className="w-full max-w-[420px] lg:max-w-none">
+            {/* Pointing hand doodle pointing to projects */}
+            <motion.div 
+              animate={{ x: [0, 8, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity }}
+              className="absolute -left-12 bottom-12 hidden xl:block text-foreground opacity-60"
+            >
+              <DoodleArrow size={36} direction="right" />
+            </motion.div>
+
+            <DoodleMonitor className="w-full">
+              <div className="bg-[#151515] text-[#e5e5e0] p-4 font-mono text-[11px] sm:text-xs leading-relaxed h-[240px] overflow-y-auto space-y-2 select-text no-scrollbar border-[1.5px] border-foreground/30 rounded-md">
+                <div className="text-green-400 font-semibold">ayesha@iut-server:~$ npm run dev</div>
+                <div className="text-neutral-500">Ready in 380ms (Turbopack)</div>
+                <div className="text-cyan-400">▲ Next.js 16.2.6 (v4 compiler)</div>
+                <div className="text-neutral-400">- Local: http://localhost:3000</div>
+                <div className="text-neutral-500">◇ Connecting to PostgreSQL Pool...</div>
+                <div className="text-green-400">✓ DB connection successful. pool_size=15</div>
+                <div className="text-neutral-500">◇ Init tailored CV guidance engine (RAG)...</div>
+                <div className="text-green-400">✓ Vector DB and OpenAI client loaded.</div>
+                <div className="text-yellow-400">✦ System Ready. Monitoring webhooks...</div>
+                <TerminalText text="tail -f /var/log/syslog" delay={3.5} prefix="ayesha@iut-server:~$ " className="text-white" />
+              </div>
+            </DoodleMonitor>
+          </AnimatedSection>
+        </div>
+      </div>
+
+      {/* Bottom Scroll Guide */}
+      <AnimatedSection delay={1.0} className="absolute bottom-8 left-6 md:left-12 lg:left-24">
+        <a href="#about" className="flex items-center gap-2.5 text-xs uppercase tracking-[0.20em] text-muted-foreground hover:text-foreground transition-colors font-display font-bold">
+          <DoodleArrow size={16} direction="down" className="animate-bounce" />
           <span>Scroll to explore</span>
         </a>
       </AnimatedSection>
