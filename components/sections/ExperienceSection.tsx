@@ -27,7 +27,7 @@ export function ExperienceSection() {
     <section id="experience" className="py-32 px-6 md:px-12 lg:px-24 relative overflow-hidden">
       <div className="max-w-4xl mx-auto">
         <AnimatedSection className="mb-16">
-          <h2 className="text-xs uppercase tracking-[0.25em] text-primary mb-4 font-bold font-display">04 / Trainer Journey</h2>
+          <h2 className="text-xs uppercase tracking-[0.25em] text-primary neon-text mb-4 font-bold font-display">04 / UPLINK.LOG</h2>
           <h3 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground font-display">Education &amp; Journey</h3>
         </AnimatedSection>
 
@@ -40,7 +40,7 @@ export function ExperienceSection() {
                   <PokeBall size={20} />
                 </div>
                 <span className="absolute -left-[42px] md:-left-[70px] -top-5 font-pixel font-bold text-[11px] text-primary whitespace-nowrap">
-                  ROUTE {String(index + 1).padStart(2, "0")}
+                  NODE {String(index + 1).padStart(2, "0")}
                 </span>
 
                 <div className="poke-card poke-card-hover p-6 md:p-8 relative">
@@ -61,7 +61,7 @@ export function ExperienceSection() {
                   </p>
 
                   <div className="border-t border-border pt-5">
-                    <span className="text-xs uppercase tracking-[0.20em] text-muted-foreground block mb-3 font-bold font-display">Core Learnings:</span>
+                    <span className="text-xs uppercase tracking-[0.20em] text-muted-foreground block mb-3 font-bold font-display">Core Modules:</span>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {item.highlights.map((point, i) => (
                         <li
@@ -83,7 +83,7 @@ export function ExperienceSection() {
             <div className="absolute -left-[49px] md:-left-[82px] top-0 flex items-center justify-center w-9 h-9 md:w-12 md:h-12">
               <span className="w-3 h-3 rounded-full bg-neon shadow-[0_0_10px_var(--color-neon)] animate-pulse" />
             </div>
-            <span className="font-pixel font-bold text-xs text-neon tracking-wide">YOU ARE HERE</span>
+            <span className="font-pixel font-bold text-xs text-neon neon-text tracking-wide">&gt; CURRENT_NODE</span>
           </div>
         </div>
       </div>

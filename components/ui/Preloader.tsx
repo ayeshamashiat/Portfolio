@@ -36,18 +36,18 @@ export function Preloader() {
             <PokeBall size={56} spinning />
 
             <div className="mt-6 flex items-center justify-between w-full mb-2">
-              <span className="text-xs font-bold tracking-[0.15em] text-foreground uppercase font-display">Loading Pokédex</span>
-              <span className="text-xs font-mono text-muted-foreground">{progress}%</span>
+              <span className="text-xs font-bold tracking-[0.15em] text-foreground uppercase font-display">Booting Neural Link</span>
+              <span className="text-xs font-mono text-primary">{progress}%</span>
             </div>
             <div className="w-full h-2.5 rounded-full bg-muted relative overflow-hidden">
               <motion.div
-                className="absolute top-0 left-0 h-full rounded-full bg-primary"
+                className="absolute top-0 left-0 h-full rounded-full bg-primary shadow-[0_0_12px_var(--primary)]"
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
               />
             </div>
             <p className="mt-4 text-[11px] text-muted-foreground tracking-[0.1em] uppercase font-mono">
-              Ayesha Mashiat — Backend Developer
+              &gt; establishing uplink // ayesha_mashiat.exe
             </p>
           </div>
         </motion.div>

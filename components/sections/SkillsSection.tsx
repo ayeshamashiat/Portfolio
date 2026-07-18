@@ -14,7 +14,7 @@ export function SkillsSection() {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <AnimatedSection>
-            <h2 className="text-sm uppercase tracking-[0.25em] text-primary mb-4 font-bold font-display">02 / Move Set</h2>
+            <h2 className="text-sm uppercase tracking-[0.25em] text-primary neon-text mb-4 font-bold font-display">02 / SKILL.STACK</h2>
             <h3 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground font-display">Core Competencies</h3>
             <AnimatePresence mode="wait">
               {activeSkills.size > 0 && (

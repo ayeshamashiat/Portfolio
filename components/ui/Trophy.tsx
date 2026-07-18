@@ -4,7 +4,7 @@ import { useId } from "react";
 
 // A generic Hall of Fame trophy medallion, tinted per achievement. Stands in
 // for gym badges without imitating any specific franchise artwork.
-export function TrophyMedal({ color = "#f0c020", size = 56 }: { color?: string; size?: number }) {
+export function TrophyMedal({ color = "#00fff2", size = 56 }: { color?: string; size?: number }) {
   const uid = useId().replace(/:/g, "");
   const gradId = `trophy-glow-${uid}`;
   const dark = `color-mix(in srgb, ${color} 65%, black)`;

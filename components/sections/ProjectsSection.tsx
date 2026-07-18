@@ -207,10 +207,10 @@ function MediaGallery({ video, screenshots, title }: { video?: string; screensho
 /* ─── Device chrome: lens, lights, buttons, D-pad ─────────────── */
 function DexLens() {
   return (
-    <div className="relative w-14 h-14 md:w-16 md:h-16 rounded-full bg-white shadow-lg flex items-center justify-center shrink-0 ring-2 ring-black/10">
+    <div className="relative w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#0a0e18] shadow-lg flex items-center justify-center shrink-0 ring-2 ring-primary/30">
       <div
-        className="w-11 h-11 md:w-[52px] md:h-[52px] rounded-full relative overflow-hidden ring-1 ring-black/20"
-        style={{ background: "radial-gradient(circle at 35% 30%, #a8e2ff, #2a8fd6 55%, #124a75 100%)" }}
+        className="w-11 h-11 md:w-[52px] md:h-[52px] rounded-full relative overflow-hidden ring-1 ring-primary/40"
+        style={{ background: "radial-gradient(circle at 35% 30%, #baffff, #00b3a6 55%, #062f2a 100%)" }}
       >
         <span className="absolute top-1.5 left-2.5 w-3 h-3 rounded-full bg-white/70 blur-[1px]" />
       </div>
@@ -318,8 +318,8 @@ export function ProjectsSection() {
 
       <div className="max-w-3xl mx-auto">
         <AnimatedSection className="mb-10">
-          <p className="text-sm uppercase tracking-[0.25em] text-primary mb-3 font-bold font-display">
-            03 / Pokédex
+          <p className="text-sm uppercase tracking-[0.25em] text-primary neon-text mb-3 font-bold font-display">
+            03 / DATA.ARCHIVE
           </p>
           <h2 className="text-5xl md:text-6xl font-bold text-foreground font-display leading-tight">
             Selected Projects
@@ -329,12 +329,12 @@ export function ProjectsSection() {
         <AnimatedSection delay={0.1}>
           {/* Device shell */}
           <div
-            className="relative rounded-[1.75rem] p-4 md:p-6 shadow-2xl overflow-hidden"
-            style={{ background: "linear-gradient(160deg, #e8483a 0%, #c92e22 55%, #a02318 100%)" }}
+            className="relative rounded-[1.75rem] p-4 md:p-6 shadow-2xl overflow-hidden border border-primary/20"
+            style={{ background: "linear-gradient(160deg, #1a2230 0%, #0d1420 55%, #05070c 100%)", boxShadow: "0 0 40px -12px color-mix(in srgb, var(--primary) 35%, transparent)" }}
           >
             <div
-              className="absolute inset-0 opacity-[0.06] pointer-events-none"
-              style={{ backgroundImage: "repeating-linear-gradient(115deg, #fff 0px, #fff 1px, transparent 1px, transparent 14px)" }}
+              className="absolute inset-0 opacity-[0.08] pointer-events-none"
+              style={{ backgroundImage: "repeating-linear-gradient(115deg, #00fff2 0px, #00fff2 1px, transparent 1px, transparent 14px)" }}
             />
 
             {/* Top row: lens + lights */}
@@ -345,11 +345,11 @@ export function ProjectsSection() {
             </div>
 
             {/* Main screen */}
-            <div className="relative rounded-xl p-2 md:p-2.5 mb-4 md:mb-5" style={{ background: "linear-gradient(160deg, #f0f0f2, #b9bcc2)" }}>
-              <div className="relative rounded-lg p-4 md:p-5 min-h-[380px] flex flex-col overflow-hidden" style={{ background: "#cfe7f5" }}>
+            <div className="relative rounded-xl p-2 md:p-2.5 mb-4 md:mb-5" style={{ background: "linear-gradient(160deg, #232b3a, #12161f)" }}>
+              <div className="relative rounded-lg p-4 md:p-5 min-h-[380px] flex flex-col overflow-hidden scanlines" style={{ background: "#050a12" }}>
                 <span className="absolute top-2.5 left-1/2 -translate-x-1/2 flex gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-500/50" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-500/50" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary/50" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-secondary/50" />
                 </span>
 
                 {/* Pip row */}
@@ -368,13 +368,13 @@ export function ProjectsSection() {
                           style={{
                             width: activeEntry?.id === p.id ? 18 : 7,
                             height: 7,
-                            backgroundColor: activeEntry?.id === p.id ? TYPE_COLORS[p.type].color : "#1a1a1a30",
+                            backgroundColor: activeEntry?.id === p.id ? TYPE_COLORS[p.type].color : "#eafcff30",
                           }}
                         />
                       </button>
                     ))}
-                    <span className="ml-auto text-[11px] font-bold text-[#1a1a1a]/50">
-                      Nº {activeEntry?.id} / {String(filtered.length).padStart(2, "0")}
+                    <span className="ml-auto text-[11px] font-bold text-[#eafcff]/50">
+                      ID {activeEntry?.id} / {String(filtered.length).padStart(2, "0")}
                     </span>
                   </div>
                 )}
@@ -389,20 +389,20 @@ export function ProjectsSection() {
                       transition={{ duration: 0.2 }}
                       className="flex flex-col flex-1 gap-3"
                     >
-                      <div className="relative rounded-lg overflow-hidden aspect-[16/9] border border-black/10">
+                      <div className="relative rounded-lg overflow-hidden aspect-[16/9] border border-primary/20">
                         <img src={activeEntry.image} alt={activeEntry.title} className="w-full h-full object-cover" />
                       </div>
 
                       <div className="flex items-center justify-between gap-2">
-                        <h3 className="font-display text-lg md:text-xl font-bold text-[#12222e] leading-tight">{activeEntry.fullTitle}</h3>
+                        <h3 className="font-display text-lg md:text-xl font-bold text-[#eafcff] leading-tight">{activeEntry.fullTitle}</h3>
                         <TypeBadge type={activeEntry.type} />
                       </div>
 
-                      <p className="text-xs md:text-sm text-[#2a3a44]/80 leading-relaxed line-clamp-3">{activeEntry.description}</p>
+                      <p className="text-xs md:text-sm text-[#c8e8ee]/80 leading-relaxed line-clamp-3">{activeEntry.description}</p>
 
                       <div className="flex flex-wrap gap-1.5">
                         {activeEntry.techStack.map(t => (
-                          <span key={t} className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#12222e]/70 border border-black/10 rounded-full bg-white/50">
+                          <span key={t} className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#eafcff]/70 border border-primary/20 rounded-full bg-white/5">
                             {t}
                           </span>
                         ))}
@@ -413,7 +413,7 @@ export function ProjectsSection() {
                           href={activeEntry.github}
                           target="_blank"
                           rel="noreferrer"
-                          className="p-2 rounded-full border border-black/15 hover:border-primary text-[#12222e]/60 hover:text-primary transition-colors cursor-pointer bg-white/40"
+                          className="p-2 rounded-full border border-primary/20 hover:border-primary text-[#eafcff]/60 hover:text-primary transition-colors cursor-pointer bg-white/5"
                           aria-label="GitHub repository"
                         >
                           <GitHubIcon className="w-4 h-4" />
@@ -433,9 +433,9 @@ export function ProjectsSection() {
                       animate={{ opacity: 1 }}
                       className="flex-1 flex flex-col items-center justify-center gap-3 text-center"
                     >
-                      <Search className="w-8 h-8 text-[#12222e]/30" />
-                      <p className="text-xs font-bold text-[#12222e]/50 tracking-wide">No signal</p>
-                      <p className="text-xs text-[#12222e]/50 max-w-[220px]">No projects match that combination of skills. Clear a filter to keep scanning.</p>
+                      <Search className="w-8 h-8 text-primary/30" />
+                      <p className="text-xs font-bold text-[#eafcff]/50 tracking-wide">No signal</p>
+                      <p className="text-xs text-[#eafcff]/50 max-w-[220px]">No projects match that combination of skills. Clear a filter to keep scanning.</p>
                       <button onClick={clearSkills} className="poke-button px-5 py-2.5 font-display text-xs cursor-pointer">
                         Clear filters
                       </button>
@@ -444,10 +444,10 @@ export function ProjectsSection() {
                 </AnimatePresence>
 
                 <div className="flex items-center justify-between mt-3 pt-2">
-                  <span className="w-3 h-3 rounded-full bg-red-500 border border-black/20" />
+                  <span className="w-3 h-3 rounded-full bg-neon shadow-[0_0_6px_var(--color-neon)] animate-pulse" />
                   <div className="flex flex-col gap-1">
                     {[0, 1, 2].map(i => (
-                      <span key={i} className="w-9 h-0.5 rounded-full bg-black/10" />
+                      <span key={i} className="w-9 h-0.5 rounded-full bg-primary/15" />
                     ))}
                   </div>
                 </div>
@@ -459,15 +459,15 @@ export function ProjectsSection() {
               <DexAButton onClick={() => activeEntry && setSelected(activeEntry)} />
 
               <div className="flex flex-col gap-1.5 mb-1.5">
-                <span className="w-12 md:w-14 h-2.5 rounded-full" style={{ background: "linear-gradient(160deg,#8a2018,#5c140f)" }} />
-                <span className="w-12 md:w-14 h-2.5 rounded-full" style={{ background: "linear-gradient(160deg,#2a5f8a,#163c5c)" }} />
+                <span className="w-12 md:w-14 h-2.5 rounded-full" style={{ background: "linear-gradient(160deg,#ff2fd0,#8a0e78)" }} />
+                <span className="w-12 md:w-14 h-2.5 rounded-full" style={{ background: "linear-gradient(160deg,#00fff2,#036b66)" }} />
               </div>
 
               {/* Secondary screen: skill search */}
-              <div className="flex-1 rounded-lg p-1.5" style={{ background: "linear-gradient(160deg, #f0f0f2, #b9bcc2)" }}>
-                <div className="relative rounded bg-[#cfe7f5] px-2.5 py-2">
+              <div className="flex-1 rounded-lg p-1.5" style={{ background: "linear-gradient(160deg, #232b3a, #12161f)" }}>
+                <div className="relative rounded bg-[#050a12] px-2.5 py-2">
                   <div className="flex items-center gap-1.5">
-                    <Search className="w-3 h-3 text-[#12222e]/50 shrink-0" />
+                    <Search className="w-3 h-3 text-primary/60 shrink-0" />
                     <input
                       type="text"
                       value={query}
@@ -475,7 +475,7 @@ export function ProjectsSection() {
                       onFocus={() => setSearchFocused(true)}
                       onBlur={() => setTimeout(() => setSearchFocused(false), 150)}
                       placeholder="Search a skill..."
-                      className="w-full bg-transparent text-[11px] md:text-xs text-[#12222e] placeholder:text-[#12222e]/40 focus:outline-none min-w-0"
+                      className="w-full bg-transparent text-[11px] md:text-xs text-[#eafcff] placeholder:text-[#eafcff]/40 focus:outline-none min-w-0"
                     />
                   </div>
 

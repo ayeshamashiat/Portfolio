@@ -41,10 +41,10 @@ export function AchievementsSection() {
     <section id="achievements" className="py-32 px-6 md:px-12 lg:px-24 relative overflow-hidden">
       <div className="max-w-5xl mx-auto">
         <AnimatedSection className="mb-14">
-          <h2 className="text-xs uppercase tracking-[0.25em] text-primary mb-4 font-bold font-display">05 / Hall of Fame</h2>
+          <h2 className="text-xs uppercase tracking-[0.25em] text-primary neon-text mb-4 font-bold font-display">05 / TROPHY.CACHE</h2>
           <h3 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground font-display">Hall of Fame</h3>
           <p className="text-muted-foreground text-sm md:text-base mt-3 max-w-xl leading-relaxed">
-            Competitions and challenges, enshrined one trophy at a time.
+            Competitions and challenges, logged one exploit at a time.
           </p>
         </AnimatedSection>
 

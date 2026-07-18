@@ -9,6 +9,7 @@ import { MouseGlow } from "@/components/ui/MouseGlow";
 import { Preloader } from "@/components/ui/Preloader";
 import { Navbar } from "@/components/ui/Navbar";
 import { EasterEgg } from "@/components/ui/EasterEgg";
+import { ScanlineOverlay } from "@/components/ui/ScanlineOverlay";
 import { SkillFilterProvider } from "@/components/SkillFilterProvider";
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
       <main className="min-h-screen relative selection:bg-white selection:text-black">
         <Preloader />
         <MouseGlow />
+        <ScanlineOverlay />
         <EasterEgg />
         <Navbar />
         <HeroSection />

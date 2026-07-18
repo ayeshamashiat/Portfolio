@@ -14,17 +14,17 @@ export type PokemonType =
   | "dragon";
 
 export const TYPE_COLORS: Record<PokemonType, { color: string; label: string }> = {
-  fire: { color: "#ee8130", label: "Fire" },
-  water: { color: "#6390f0", label: "Water" },
-  grass: { color: "#7ac74c", label: "Grass" },
-  electric: { color: "#e8c200", label: "Electric" },
-  psychic: { color: "#f95587", label: "Psychic" },
-  steel: { color: "#8f9bb3", label: "Steel" },
-  ground: { color: "#b6875a", label: "Ground" },
-  fairy: { color: "#d685ad", label: "Fairy" },
-  normal: { color: "#a0a29e", label: "Normal" },
-  ghost: { color: "#735797", label: "Ghost" },
-  dragon: { color: "#6f35fc", label: "Dragon" },
+  fire: { color: "#ff3864", label: "Core" },
+  water: { color: "#00e5ff", label: "Flow" },
+  grass: { color: "#39ff88", label: "Bio" },
+  electric: { color: "#f9e000", label: "Volt" },
+  psychic: { color: "#d946ef", label: "Neural" },
+  steel: { color: "#9fb3c8", label: "Chrome" },
+  ground: { color: "#ff9d2e", label: "Terra" },
+  fairy: { color: "#ff5ec4", label: "Aug" },
+  normal: { color: "#8b98a5", label: "Base" },
+  ghost: { color: "#7c3aed", label: "Ghost" },
+  dragon: { color: "#b026ff", label: "Overclock" },
 };
 
 // Small original glyphs, one per type — a shared visual vocabulary reused as

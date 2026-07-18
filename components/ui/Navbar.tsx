@@ -46,7 +46,7 @@ export function Navbar() {
         <div className="relative flex items-center justify-between px-5 py-2.5 rounded-full glass-nav">
           <a href="#" className="relative z-10 flex items-center gap-2.5 text-xl font-bold tracking-tight text-foreground hover:opacity-80 transition-opacity font-display">
             <PokeBall size={26} />
-            Ayesha <span className="text-primary">Mashiat</span>
+            Ayesha <span className="text-primary neon-text">Mashiat</span>
           </a>
 
           {/* Desktop Nav */}
@@ -75,6 +75,10 @@ export function Navbar() {
                 <PokeBall size={20} spinning={false} />
               </button>
             )}
+            <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground font-mono">
+              <span className="w-1.5 h-1.5 rounded-full bg-neon shadow-[0_0_6px_var(--color-neon)] animate-pulse" />
+              Online
+            </span>
             <a
               href="#contact"
               className="poke-button inline-flex items-center gap-1.5 px-4 py-2 text-xs uppercase tracking-wider cursor-pointer font-display"

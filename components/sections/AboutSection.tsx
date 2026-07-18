@@ -35,14 +35,14 @@ export function AboutSection() {
   return (
     <section id="about" className="py-32 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto relative">
       <AnimatedSection>
-        <h2 className="text-xs uppercase tracking-[0.25em] text-primary mb-3 font-bold font-display">01 / Trainer Profile</h2>
+        <h2 className="text-xs uppercase tracking-[0.25em] text-primary neon-text mb-3 font-bold font-display">01 / USER.PROFILE</h2>
         <h3 className="text-4xl md:text-6xl font-bold mb-16 tracking-tight text-foreground font-display">My Approach to Building</h3>
       </AnimatedSection>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start mb-20">
         <AnimatedSection delay={0.2} className="lg:col-span-5">
           <div className="poke-card p-6 md:p-7 space-y-4">
-            <span className="font-pixel font-bold text-xs text-primary tracking-wide block pb-4 border-b border-border">TRAINER ID</span>
+            <span className="font-pixel font-bold text-xs text-primary tracking-wide block pb-4 border-b border-border">USER.ID</span>
             {[
               { label: "SCHOOL", value: "Islamic University of Technology" },
               { label: "YEAR", value: "3rd Year, Software Engineering" },
@@ -55,7 +55,7 @@ export function AboutSection() {
               </div>
             ))}
             <p className="text-sm text-muted-foreground italic pt-4 border-t border-border leading-relaxed">
-              &quot;I believe in structural stability and deploying systems that actually work under stress.&quot;
+              &quot;I believe in structural stability and deploying systems that actually work under stress — no smoke, no mirrors.&quot;
             </p>
           </div>
         </AnimatedSection>
@@ -64,7 +64,7 @@ export function AboutSection() {
         <AnimatedSection delay={0.4} className="lg:col-span-7">
           <div className="poke-card p-6 md:p-8">
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
-              <span className="font-pixel font-bold text-xs text-primary tracking-wide">STATUS SCREEN</span>
+              <span className="font-pixel font-bold text-xs text-primary tracking-wide">STAT.MONITOR</span>
               <span className="font-pixel font-bold text-xs text-muted-foreground tracking-wide">4 SKILLS</span>
             </div>
 

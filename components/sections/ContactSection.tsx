@@ -29,7 +29,7 @@ export function ContactSection() {
           <div className="flex justify-center mb-4">
             <PokeBall size={32} />
           </div>
-          <span className="text-xs uppercase tracking-[0.25em] text-primary mb-4 font-bold block font-display">06 / Poké Center</span>
+          <span className="text-xs uppercase tracking-[0.25em] text-primary neon-text mb-4 font-bold block font-display">06 / COMMS.LINK</span>
           <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight text-foreground font-display">Let&apos;s build something together</h2>
           <p className="text-base md:text-lg text-muted-foreground mb-10 max-w-xl mx-auto leading-relaxed">
             I am always open to new project opportunities, collaborations, or discussing scalability, APIs, and systems design. Feel free to drop a message.
@@ -37,7 +37,7 @@ export function ContactSection() {
         </AnimatedSection>
 
         <AnimatedSection delay={0.1} className="flex flex-col items-center gap-3 mb-10">
-          <span className="font-pixel font-bold text-xs text-primary tracking-wide">◇ PC HEAL STATION</span>
+          <span className="font-pixel font-bold text-xs text-primary tracking-wide">◇ UPLINK STATION</span>
           <button
             type="button"
             onClick={copyEmail}
@@ -123,7 +123,7 @@ export function ContactSection() {
 
       <div className="mt-40 text-center text-xs tracking-wider text-muted-foreground">
         <p>© {new Date().getFullYear()} Ayesha Mashiat. All rights reserved.</p>
-        <p className="mt-2 text-foreground/40 font-semibold">Designed &amp; engineered like a true trainer.</p>
+        <p className="mt-2 text-foreground/40 font-semibold">Designed &amp; engineered in the neon sprawl.</p>
       </div>
     </section>
   );
