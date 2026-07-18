@@ -1,12 +1,45 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
-import { Globe, X, ArrowUpRight, Play, ChevronLeft, ChevronRight } from "lucide-react";
+import { useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Globe, X, ArrowUpRight, ChevronLeft, ChevronRight, ChevronUp, Search } from "lucide-react";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
+import { TypeBadge, TYPE_COLORS, PokemonType } from "@/components/ui/TypeBadge";
+import { useSkillFilter, skillMatchesTech } from "@/components/SkillFilterProvider";
+import { PokeSilhouetteField, SILHOUETTES } from "@/components/ui/PokeSilhouettes";
+import { ALL_SKILLS } from "@/lib/skills";
+
+const PROJECTS_SILHOUETTES = [
+  { Icon: SILHOUETTES[0], top: "4%", left: "2%", size: 44, rotate: -8 },
+  { Icon: SILHOUETTES[1], top: "80%", left: "95%", size: 42, rotate: 10 },
+  { Icon: SILHOUETTES[2], top: "50%", left: "97%", size: 38, rotate: -6 },
+  { Icon: SILHOUETTES[3], top: "88%", left: "1%", size: 40, rotate: 8 },
+];
+
+function GitHubIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+      <path d="M9 18c-4.51 2-5-2-7-2" />
+    </svg>
+  );
+}
 
 /* ─── Data ─────────────────────────────────────────────────────── */
-const PROJECTS = [
+const PROJECTS: {
+  id: string;
+  title: string;
+  fullTitle: string;
+  description: string;
+  techStack: string[];
+  github: string;
+  live: string;
+  image: string;
+  type: PokemonType;
+  video?: string;
+  screenshots?: string[];
+  details: { overview: string; features: string[] };
+}[] = [
   {
     id: "01",
     title: "Jobscape",
@@ -17,9 +50,7 @@ const PROJECTS = [
     github: "https://github.com/ayeshamashiat/Jobscape_Backend",
     live: "#",
     image: "/jobscape_preview.png",
-    accent: "#6366f1",
-    scribble: "backend magic ✦",
-    ruling: "#6366f120",
+    type: "water",
     details: {
       overview:
         "Jobscape Backend was built to handle high-frequency candidate applications and recruiter actions. The system uses event-driven architectures to process automated transactions and notifications, with double-fetch protection on registration and email verification channels.",
@@ -41,9 +72,7 @@ const PROJECTS = [
     github: "https://github.com/ayeshamashiat/CalorieAdventureGame",
     live: "#",
     image: "/calorie_adventure_preview.png",
-    accent: "#a855f7",
-    scribble: "60 fps purr-fect 🐱",
-    ruling: "#a855f720",
+    type: "grass",
     video: "/resources/CalorieAdventureGame/CalorieAdventureGame.mp4",
     screenshots: [
       "/resources/CalorieAdventureGame/screenshot1.png",
@@ -71,9 +100,7 @@ const PROJECTS = [
     github: "https://github.com/adrita06/Kindle_Hope",
     live: "#",
     image: "/kindle_hope_preview.png",
-    accent: "#f59e0b",
-    scribble: "giving back 💛",
-    ruling: "#f59e0b20",
+    type: "fairy",
     details: {
       overview:
         "Kindle Hope bridges philanthropists and meaningful causes. Seamless donation flows, real-time campaign progress tracking, and a user dashboard for managing contribution history and impact metrics.",
@@ -95,9 +122,7 @@ const PROJECTS = [
     github: "https://github.com/ayeshamashiat/CareerPilor_CodeSprint",
     live: "#",
     image: "/career_pilot_preview.png",
-    accent: "#10b981",
-    scribble: "RAG-powered 🤖",
-    ruling: "#10b98120",
+    type: "psychic",
     video: "https://www.youtube.com/watch?v=_xa97LQYlAM",
     screenshots: [],
     details: {
@@ -113,6 +138,8 @@ const PROJECTS = [
   },
 ];
 
+type Project = (typeof PROJECTS)[number];
+
 /* ─── YouTube helper ──────────────────────────────────────────── */
 function getYouTubeEmbedUrl(url: string): string | null {
   const patterns = [
@@ -126,97 +153,6 @@ function getYouTubeEmbedUrl(url: string): string | null {
   return null;
 }
 
-/* ─── Ruled lines on card (notebook paper feel) ───────────────── */
-function RuledLines({ color }: { color: string }) {
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[inherit]" aria-hidden>
-      {[38, 58, 78, 98, 118, 138, 158, 178, 198, 218, 238, 258, 278, 298, 318, 338].map((y) => (
-        <div
-          key={y}
-          className="absolute left-0 right-0 h-px"
-          style={{ top: y, background: color }}
-        />
-      ))}
-    </div>
-  );
-}
-
-/* ─── Washi tape ──────────────────────────────────────────────── */
-function WashiTape({ accent, rotate = -1.5 }: { accent: string; rotate?: number }) {
-  return (
-    <div
-      className="absolute -top-4 left-1/2 w-28 h-7 z-50 pointer-events-none"
-      style={{ transform: `translateX(-50%) rotate(${rotate}deg)` }}
-    >
-      <div
-        className="w-full h-full flex items-center justify-center"
-        style={{
-          background: accent + "25",
-          border: `1.5px dashed ${accent}55`,
-          boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.05)",
-        }}
-      >
-        <div
-          className="absolute inset-0 opacity-15"
-          style={{
-            backgroundImage: `repeating-linear-gradient(90deg, ${accent}50 0px, transparent 1px, transparent 5px)`,
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
-/* ─── Per-card pin doodle ─────────────────────────────────────── */
-function PinDoodle({ accent }: { accent: string }) {
-  return (
-    <div className="absolute -top-3 right-10 z-50 pointer-events-none">
-      <svg width="18" height="32" viewBox="0 0 18 32" fill="none">
-        <circle cx="9" cy="7" r="6" fill={accent} opacity="0.85" stroke="currentColor" strokeWidth="1.5" />
-        <circle cx="9" cy="7" r="2.5" fill="white" opacity="0.4" />
-        <line x1="9" y1="13" x2="9" y2="32" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.4" />
-      </svg>
-    </div>
-  );
-}
-
-/* ─── Sketchy corner fold ─────────────────────────────────────── */
-function CornerFold({ accent }: { accent: string }) {
-  return (
-    <div className="absolute bottom-0 right-0 pointer-events-none z-10">
-      <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-        <path d="M36 36 L36 18 L18 36 Z" fill={accent} opacity="0.15" />
-        <path d="M18 36 L36 18" stroke={accent} strokeWidth="1.2" opacity="0.4" />
-      </svg>
-    </div>
-  );
-}
-
-/* ─── Swipe direction indicator ───────────────────────────────── */
-function SwipeIndicator({ dragX }: { dragX: ReturnType<typeof useMotionValue<number>> }) {
-  const leftOpacity = useTransform(dragX, [-160, -40, 0], [1, 0, 0]);
-  const rightOpacity = useTransform(dragX, [0, 40, 160], [0, 0, 1]);
-  const leftScale = useTransform(dragX, [-160, -40], [1.2, 0.8]);
-  const rightScale = useTransform(dragX, [40, 160], [0.8, 1.2]);
-
-  return (
-    <>
-      <motion.div
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-50 font-display font-bold text-sm px-3 py-1 rounded-md border-2 border-red-400 text-red-400 bg-background/80 backdrop-blur-sm pointer-events-none"
-        style={{ opacity: leftOpacity, scale: leftScale }}
-      >
-        ← skip
-      </motion.div>
-      <motion.div
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-50 font-display font-bold text-sm px-3 py-1 rounded-md border-2 border-green-500 text-green-500 bg-background/80 backdrop-blur-sm pointer-events-none"
-        style={{ opacity: rightOpacity, scale: rightScale }}
-      >
-        next →
-      </motion.div>
-    </>
-  );
-}
-
 /* ─── Media Gallery (in modal) ────────────────────────────────── */
 function MediaGallery({ video, screenshots, title }: { video?: string; screenshots?: string[]; title: string }) {
   const [tab, setTab] = useState<"video" | "screenshots">(video ? "video" : "screenshots");
@@ -226,17 +162,17 @@ function MediaGallery({ video, screenshots, title }: { video?: string; screensho
   return (
     <div className="space-y-3">
       {hasBoth && (
-        <div className="flex gap-2 font-display">
+        <div className="flex gap-2">
           {[{ k: "video", label: "▶ Demo" }, { k: "screenshots", label: `📸 Screens (${screenshots!.length})` }].map(({ k, label }) => (
             <button key={k} onClick={() => setTab(k as "video" | "screenshots")}
-              className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all border cursor-pointer doodle-effect ${tab === k ? "bg-foreground text-background border-foreground" : "bg-background border-foreground/20 text-muted-foreground hover:text-foreground"}`}>
+              className={`px-3 py-1.5 rounded-full text-sm font-bold transition-all cursor-pointer font-display ${tab === k ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"}`}>
               {label}
             </button>
           ))}
         </div>
       )}
       {tab === "video" && video && (
-        <div className="relative rounded-xl overflow-hidden border border-foreground/20 doodle-effect">
+        <div className="relative rounded-xl overflow-hidden border border-border">
           {getYouTubeEmbedUrl(video)
             ? <iframe src={getYouTubeEmbedUrl(video)!} className="w-full aspect-video" allowFullScreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" />
             : <video src={video} controls className="w-full aspect-video object-cover" />}
@@ -244,19 +180,19 @@ function MediaGallery({ video, screenshots, title }: { video?: string; screensho
       )}
       {tab === "screenshots" && screenshots && screenshots.length > 0 && (
         <div className="space-y-3">
-          <div className="relative rounded-xl overflow-hidden border border-foreground/20 doodle-effect">
+          <div className="relative rounded-xl overflow-hidden border border-border">
             <img src={screenshots[shot]} alt={`${title} ${shot + 1}`} className="w-full aspect-video object-cover" />
             {screenshots.length > 1 && (
               <>
-                <button onClick={() => setShot(p => (p - 1 + screenshots.length) % screenshots.length)} className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-background border border-foreground/30 cursor-pointer"><ChevronLeft className="w-4 h-4" /></button>
-                <button onClick={() => setShot(p => (p + 1) % screenshots.length)} className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-background border border-foreground/30 cursor-pointer"><ChevronRight className="w-4 h-4" /></button>
+                <button onClick={() => setShot(p => (p - 1 + screenshots.length) % screenshots.length)} className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-background/80 border border-border cursor-pointer"><ChevronLeft className="w-4 h-4" /></button>
+                <button onClick={() => setShot(p => (p + 1) % screenshots.length)} className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-background/80 border border-border cursor-pointer"><ChevronRight className="w-4 h-4" /></button>
               </>
             )}
           </div>
           {screenshots.length > 1 && (
             <div className="flex gap-2 overflow-x-auto no-scrollbar">
               {screenshots.map((src, i) => (
-                <button key={i} onClick={() => setShot(i)} className={`shrink-0 w-20 aspect-video rounded overflow-hidden border cursor-pointer transition-all ${i === shot ? "border-foreground" : "border-foreground/20 opacity-50 hover:opacity-100"}`}>
+                <button key={i} onClick={() => setShot(i)} className={`shrink-0 w-20 aspect-video rounded-lg overflow-hidden border cursor-pointer transition-all ${i === shot ? "border-primary" : "border-border opacity-50 hover:opacity-100"}`}>
                   <img src={src} className="w-full h-full object-cover" />
                 </button>
               ))}
@@ -268,322 +204,343 @@ function MediaGallery({ video, screenshots, title }: { video?: string; screensho
   );
 }
 
-/* ─── Single draggable card ───────────────────────────────────── */
-function ProjectCard({
-  project,
-  stackPos,
-  isActive,
-  isSwiped,
-  onSwipe,
-  onTap,
-}: {
-  project: typeof PROJECTS[0];
-  stackPos: number;
-  isActive: boolean;
-  isSwiped: boolean;
-  onSwipe: () => void;
-  onTap: () => void;
-}) {
-  const dragX = useMotionValue(0);
-  const rotate = useTransform(dragX, [-300, 0, 300], [-18, 0, 18]);
-  const cardOpacity = useTransform(dragX, [-200, 0, 200], [0.7, 1, 0.7]);
-
-  // deterministic per-card resting tilt
-  const n = parseInt(project.id, 10);
-  const restRot = ((n * 41) % 9) - 4.5;
-  const restX   = ((n * 29) % 12) - 6;
-
-  const variants = {
-    active:  { x: 0, y: 0, rotate: 0, scale: 1, opacity: 1, zIndex: 40 },
-    behind:  { x: restX, y: stackPos * 14, rotate: restRot, scale: 1 - stackPos * 0.045, opacity: stackPos > 2 ? 0 : 1, zIndex: 40 - stackPos },
-    swiped:  { x: n % 2 === 0 ? -900 : 900, y: 100, rotate: n % 2 === 0 ? -30 : 30, scale: 0.85, opacity: 0, zIndex: 0 },
-  };
-
+/* ─── Device chrome: lens, lights, buttons, D-pad ─────────────── */
+function DexLens() {
   return (
-    <motion.div
-      variants={variants}
-      initial="behind"
-      animate={isSwiped ? "swiped" : isActive ? "active" : "behind"}
-      transition={{ type: "spring", stiffness: 200, damping: 25 }}
-      drag={isActive ? "x" : false}
-      dragConstraints={{ left: 0, right: 0 }}
-      dragElastic={0.6}
-      style={{
-        position: "absolute",
-        inset: 0,
-        cursor: isActive ? "grab" : "default",
-        rotate: isActive ? rotate : undefined,
-        x: isActive ? dragX : undefined,
-        opacity: isActive ? cardOpacity : undefined,
-      }}
-      onDrag={(_, info) => dragX.set(info.offset.x)}
-      onDragEnd={(_, info) => {
-        dragX.set(0);
-        if (Math.abs(info.offset.x) > 100 || Math.abs(info.velocity.x) > 500) onSwipe();
-      }}
-      onTap={() => isActive && onTap()}
-      whileDrag={{ cursor: "grabbing" }}
-    >
-      {/* Tape / Pin decoration */}
-      {isActive && (n % 2 === 0 ? <WashiTape accent={project.accent} /> : <PinDoodle accent={project.accent} />)}
-
-      {/* Card body */}
+    <div className="relative w-14 h-14 md:w-16 md:h-16 rounded-full bg-white shadow-lg flex items-center justify-center shrink-0 ring-2 ring-black/10">
       <div
-        className="relative w-full h-full bg-card-bg border-[2.5px] border-foreground overflow-hidden select-none"
-        style={{
-          borderRadius: "var(--doodle-radius)",
-          filter: "url(#doodle-border-filter)",
-          boxShadow: isActive ? "5px 6px 0 0 currentColor" : "3px 4px 0 0 currentColor",
-        }}
+        className="w-11 h-11 md:w-[52px] md:h-[52px] rounded-full relative overflow-hidden ring-1 ring-black/20"
+        style={{ background: "radial-gradient(circle at 35% 30%, #a8e2ff, #2a8fd6 55%, #124a75 100%)" }}
       >
-        {/* Ruled lines */}
-        <RuledLines color={project.ruling} />
-
-        {/* Accent top bar */}
-        <div className="absolute top-0 left-0 right-0 h-1.5" style={{ background: project.accent, opacity: 0.6 }} />
-
-        {/* Image panel — top half */}
-        <div className="relative h-[52%] overflow-hidden border-b-[2px] border-dashed border-foreground/20">
-          <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-black/30" />
-
-          {/* Big project number watermark */}
-          <span className="absolute bottom-2 left-3 font-display font-bold text-5xl leading-none select-none" style={{ color: project.accent, opacity: 0.3 }}>
-            {project.id}
-          </span>
-
-          {/* Swipe indicators */}
-          {isActive && <SwipeIndicator dragX={dragX} />}
-        </div>
-
-        {/* Content — bottom half */}
-        <div className="p-5 pt-4 flex flex-col gap-3 h-[48%]">
-          <div className="flex items-start justify-between gap-2">
-            <h4 className="font-display text-xl font-bold text-foreground leading-tight">{project.fullTitle}</h4>
-            <span className="font-display text-[10px] font-bold text-muted-foreground/60 shrink-0 mt-1 rotate-[-1deg]" style={{ color: project.accent, opacity: 0.7 }}>
-              {project.scribble}
-            </span>
-          </div>
-
-          <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{project.description}</p>
-
-          {/* Tech tags */}
-          <div className="flex flex-wrap gap-1 mt-auto">
-            {project.techStack.map(t => (
-              <span key={t} className="px-2 py-0.5 font-display text-[9px] font-bold uppercase tracking-wide text-muted-foreground border border-dashed border-foreground/25 rounded-sm bg-background doodle-effect">
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Corner fold */}
-        <CornerFold accent={project.accent} />
-
-        {/* Tap hint */}
-        {isActive && (
-          <div className="absolute bottom-3 right-9 font-display text-[9px] font-bold text-muted-foreground/50 rotate-[1deg] pointer-events-none">
-            tap to expand ↗
-          </div>
-        )}
+        <span className="absolute top-1.5 left-2.5 w-3 h-3 rounded-full bg-white/70 blur-[1px]" />
       </div>
-    </motion.div>
+    </div>
+  );
+}
+
+function DexLights({ signal }: { signal: boolean }) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className={`w-3 h-3 md:w-3.5 md:h-3.5 rounded-full border border-black/20 ${signal ? "bg-red-900/40" : "bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.7)]"}`} />
+      <span className="w-3 h-3 md:w-3.5 md:h-3.5 rounded-full bg-yellow-400 border border-black/20 shadow-[0_0_6px_rgba(250,204,21,0.6)]" />
+      <span className={`w-3 h-3 md:w-3.5 md:h-3.5 rounded-full border border-black/20 ${signal ? "bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.7)] animate-pulse" : "bg-green-900/40"}`} />
+    </div>
+  );
+}
+
+function DexAButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label="Open full details"
+      title="Full details"
+      className="w-11 h-11 md:w-12 md:h-12 rounded-full bg-[#161616] border-2 border-black/40 shadow-md flex items-center justify-center text-white font-black text-sm cursor-pointer active:scale-95 transition-transform shrink-0"
+    >
+      A
+    </button>
+  );
+}
+
+function DexPad({ onLeft, onRight, onUp }: { onLeft: () => void; onRight: () => void; onUp: () => void }) {
+  const btnClass = "absolute flex items-center justify-center text-white/60 hover:text-white transition-colors cursor-pointer";
+  return (
+    <div className="relative w-16 h-16 md:w-[72px] md:h-[72px] shrink-0">
+      <div
+        className="absolute inset-0"
+        style={{
+          background: "#161616",
+          clipPath: "polygon(35% 0%, 65% 0%, 65% 35%, 100% 35%, 100% 65%, 65% 65%, 65% 100%, 35% 100%, 35% 65%, 0% 65%, 0% 35%, 35% 35%)",
+        }}
+      />
+      <button type="button" onClick={onUp} aria-label="Clear skill filters" title="Clear filters" className={`${btnClass} top-0 left-1/2 -translate-x-1/2 w-6 h-5`}>
+        <ChevronUp className="w-4 h-4" />
+      </button>
+      <button type="button" onClick={onLeft} aria-label="Previous project" title="Previous" className={`${btnClass} left-0 top-1/2 -translate-y-1/2 w-5 h-6`}>
+        <ChevronLeft className="w-4 h-4" />
+      </button>
+      <button type="button" onClick={onRight} aria-label="Next project" title="Next" className={`${btnClass} right-0 top-1/2 -translate-y-1/2 w-5 h-6`}>
+        <ChevronRight className="w-4 h-4" />
+      </button>
+      <span className="absolute inset-0 m-auto w-6 h-6 rounded-full bg-[#2a2a2a] border border-black/40" />
+    </div>
   );
 }
 
 /* ─── Main Section ────────────────────────────────────────────── */
 export function ProjectsSection() {
-  const [current, setCurrent] = useState(0);
-  const [selected, setSelected] = useState<typeof PROJECTS[0] | null>(null);
+  const [selected, setSelected] = useState<Project | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [searchFocused, setSearchFocused] = useState(false);
+  const { activeSkills, toggleSkill, clearSkills } = useSkillFilter();
 
-  const advance = () => setCurrent(p => Math.min(p + 1, PROJECTS.length));
-  const back    = () => setCurrent(p => Math.max(p - 1, 0));
-  const reset   = () => setCurrent(0);
+  const filtered = useMemo(() => {
+    if (activeSkills.size === 0) return PROJECTS;
+    const skills = Array.from(activeSkills);
+    return PROJECTS.filter(p => p.techStack.some(t => skills.some(s => skillMatchesTech(s, t))));
+  }, [activeSkills]);
 
-  const done = current >= PROJECTS.length;
-  const activeProject = done ? null : PROJECTS[current];
+  const activeEntry = useMemo(() => {
+    if (filtered.length === 0) return null;
+    return filtered.find(p => p.id === activeId) ?? filtered[0];
+  }, [filtered, activeId]);
+
+  const step = (dir: 1 | -1) => {
+    if (!activeEntry || filtered.length === 0) return;
+    const i = filtered.findIndex(p => p.id === activeEntry.id);
+    const next = (i + dir + filtered.length) % filtered.length;
+    setActiveId(filtered[next].id);
+  };
+
+  const suggestions = useMemo(() => {
+    const q = query.trim();
+    if (!q) return [];
+    return ALL_SKILLS
+      .filter(s => !activeSkills.has(s.name) && skillMatchesTech(q, s.name))
+      .map(s => ({
+        ...s,
+        matchCount: PROJECTS.filter(p => p.techStack.some(t => skillMatchesTech(s.name, t))).length,
+      }))
+      .filter(s => s.matchCount > 0)
+      .slice(0, 6);
+  }, [query, activeSkills]);
+
+  const selectSuggestion = (skill: string) => {
+    toggleSkill(skill);
+    setQuery("");
+    setSearchFocused(false);
+  };
 
   return (
     <section id="projects" className="py-24 px-6 md:px-12 lg:px-24 relative overflow-hidden">
+      <PokeSilhouetteField items={PROJECTS_SILHOUETTES} />
 
-      {/* ── Full-width two-column layout ── */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start min-h-[680px]">
+      <div className="max-w-3xl mx-auto">
+        <AnimatedSection className="mb-10">
+          <p className="text-sm uppercase tracking-[0.25em] text-primary mb-3 font-bold font-display">
+            03 / Pokédex
+          </p>
+          <h2 className="text-5xl md:text-6xl font-bold text-foreground font-display leading-tight">
+            Selected Projects
+          </h2>
+        </AnimatedSection>
 
-        {/* ── LEFT: info panel ── */}
-        <div className="flex flex-col justify-between h-full lg:py-6">
-
-          {/* Header */}
-          <AnimatedSection>
-            <p className="text-sm uppercase tracking-[0.25em] text-primary mb-3 font-bold font-display">
-              03 / Case Studies
-            </p>
-            <h2 className="text-5xl md:text-6xl font-bold text-foreground font-display leading-tight mb-6">
-              Selected<br />Projects
-            </h2>
-          </AnimatedSection>
-
-          {/* Active project info — animates on change */}
-          <AnimatePresence mode="wait">
-            {activeProject ? (
-              <motion.div
-                key={activeProject.id}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="flex-1 flex flex-col gap-6 mt-8"
-              >
-                {/* Big numbered title */}
-                <div className="flex items-baseline gap-3">
-                  <span className="font-display text-7xl font-bold leading-none" style={{ color: activeProject.accent, opacity: 0.18 }}>
-                    {activeProject.id}
-                  </span>
-                  <h3 className="font-display text-2xl md:text-3xl font-bold text-foreground leading-tight">
-                    {activeProject.fullTitle}
-                  </h3>
-                </div>
-
-                <p className="text-muted-foreground text-sm leading-relaxed max-w-md">
-                  {activeProject.description}
-                </p>
-
-                {/* Tech stack */}
-                <div className="flex flex-wrap gap-2">
-                  {activeProject.techStack.map(t => (
-                    <span key={t} className="px-3 py-1.5 font-display text-xs font-bold border border-foreground/25 bg-background text-muted-foreground rounded-sm doodle-effect">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Links */}
-                <div className="flex gap-3 flex-wrap">
-                  <a href={activeProject.github} target="_blank" rel="noreferrer"
-                    className="doodle-button px-4 py-2.5 text-sm font-bold font-display text-foreground flex items-center gap-2 hover:bg-foreground hover:text-background transition-colors">
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-                      <path d="M9 18c-4.51 2-5-2-7-2" />
-                    </svg>
-                    GitHub
-                  </a>
-                  <button onClick={() => setSelected(activeProject)}
-                    className="doodle-button px-4 py-2.5 text-sm font-bold font-display text-foreground flex items-center gap-2 hover:bg-foreground hover:text-background transition-colors cursor-pointer">
-                    Full Details
-                    <ArrowUpRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="done"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex-1 flex flex-col items-start justify-center gap-4 mt-8"
-              >
-                <span className="text-5xl">🎉</span>
-                <h3 className="font-display text-2xl font-bold text-foreground">All projects browsed!</h3>
-                <p className="text-muted-foreground text-sm max-w-xs">You flipped through every project. Reset the stack to start again.</p>
-                <button onClick={reset} className="doodle-button px-5 py-2.5 font-display font-bold text-sm text-foreground cursor-pointer">
-                  ↺ Reset Stack
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Navigation controls */}
-          <div className="mt-10 flex flex-col gap-4">
-            {/* Pip row */}
-            <div className="flex items-center gap-2">
-              {PROJECTS.map((_, i) => (
-                <button key={i} onClick={() => setCurrent(i)} aria-label={`Project ${i + 1}`} className="cursor-pointer">
-                  <div className={`transition-all duration-300 rounded-full border ${
-                    i === current
-                      ? "w-7 h-2.5 border-foreground bg-foreground"
-                      : i < current
-                      ? "w-2.5 h-2.5 border-foreground/40 bg-foreground/25"
-                      : "w-2.5 h-2.5 border-foreground/20 bg-transparent hover:border-foreground/50"
-                  }`} />
-                </button>
-              ))}
-              <span className="ml-2 font-display text-xs font-bold text-muted-foreground">
-                {Math.min(current + 1, PROJECTS.length)} / {PROJECTS.length}
-              </span>
-            </div>
-
-            {/* Arrow buttons */}
-            <div className="flex items-center gap-3">
-              <button onClick={back} disabled={current === 0} aria-label="Previous"
-                className={`doodle-button p-2.5 text-foreground transition-all ${current === 0 ? "opacity-25 cursor-not-allowed" : "cursor-pointer hover:scale-105 active:scale-95"}`}>
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <button onClick={advance} disabled={done} aria-label="Next"
-                className={`doodle-button p-2.5 text-foreground transition-all ${done ? "opacity-25 cursor-not-allowed" : "cursor-pointer hover:scale-105 active:scale-95"}`}>
-                <ChevronRight className="w-5 h-5" />
-              </button>
-              <span className="font-display text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 ml-1">
-                ← drag card to browse →
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* ── RIGHT: card stack ── */}
-        <div className="relative flex items-center justify-center" style={{ minHeight: "560px" }}>
-          {/* Shadow layers behind to show depth */}
-          {!done && [2, 1].map(depth => (
+        <AnimatedSection delay={0.1}>
+          {/* Device shell */}
+          <div
+            className="relative rounded-[1.75rem] p-4 md:p-6 shadow-2xl overflow-hidden"
+            style={{ background: "linear-gradient(160deg, #e8483a 0%, #c92e22 55%, #a02318 100%)" }}
+          >
             <div
-              key={depth}
-              className="absolute bg-card-bg border-[2.5px] border-foreground/30"
-              style={{
-                inset: 0,
-                borderRadius: "var(--doodle-radius)",
-                transform: `translateY(${depth * 12}px) translateX(${((current + depth) * 17 % 9) - 4}px) rotate(${((current + depth) * 41 % 9) - 4.5}deg)`,
-                zIndex: 40 - depth,
-                filter: "url(#doodle-border-filter)",
-              }}
+              className="absolute inset-0 opacity-[0.06] pointer-events-none"
+              style={{ backgroundImage: "repeating-linear-gradient(115deg, #fff 0px, #fff 1px, transparent 1px, transparent 14px)" }}
             />
-          ))}
 
-          {/* Cards */}
-          <AnimatePresence mode="popLayout">
-            {done ? (
-              <motion.div
-                key="empty"
-                initial={{ opacity: 0, scale: 0.94 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-0 bg-card-bg border-[2.5px] border-dashed border-foreground/30 flex flex-col items-center justify-center text-center p-10 z-50"
-                style={{ borderRadius: "var(--doodle-radius)", filter: "url(#doodle-border-filter)" }}
-              >
-                <svg width="56" height="56" viewBox="0 0 56 56" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" className="mb-5 text-foreground/30">
-                  <circle cx="28" cy="28" r="24" />
-                  <circle cx="20" cy="22" r="3" fill="currentColor" />
-                  <circle cx="36" cy="22" r="3" fill="currentColor" />
-                  <path d="M18 36 C22 42, 34 42, 38 36" />
-                  {/* Small stars */}
-                  <path d="M8 12 L9 9 L10 12 L13 12 L10.5 14 L11.5 17 L9 15 L6.5 17 L7.5 14 L5 12 Z" opacity="0.4" />
-                </svg>
-                <p className="font-display text-xl font-bold text-foreground mb-2">All done!</p>
-                <p className="text-xs text-muted-foreground">Use the reset button on the left to browse again.</p>
-              </motion.div>
-            ) : (
-              PROJECTS.map((project, idx) => {
-                if (idx < current || idx - current > 2) return null;
-                return (
-                  <ProjectCard
-                    key={project.id}
-                    project={project}
-                    stackPos={idx - current}
-                    isActive={idx === current}
-                    isSwiped={idx < current}
-                    onSwipe={advance}
-                    onTap={() => setSelected(project)}
-                  />
-                );
-              })
+            {/* Top row: lens + lights */}
+            <div className="relative flex items-center gap-4 mb-4 md:mb-5">
+              <DexLens />
+              <div className="flex-1" />
+              <DexLights signal={!!activeEntry} />
+            </div>
+
+            {/* Main screen */}
+            <div className="relative rounded-xl p-2 md:p-2.5 mb-4 md:mb-5" style={{ background: "linear-gradient(160deg, #f0f0f2, #b9bcc2)" }}>
+              <div className="relative rounded-lg p-4 md:p-5 min-h-[380px] flex flex-col overflow-hidden" style={{ background: "#cfe7f5" }}>
+                <span className="absolute top-2.5 left-1/2 -translate-x-1/2 flex gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-500/50" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-500/50" />
+                </span>
+
+                {/* Pip row */}
+                {filtered.length > 0 && (
+                  <div className="flex items-center gap-1.5 mb-3 mt-3">
+                    {filtered.map(p => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => setActiveId(p.id)}
+                        aria-label={`View ${p.title}`}
+                        className="cursor-pointer p-1"
+                      >
+                        <span
+                          className="block rounded-full transition-all"
+                          style={{
+                            width: activeEntry?.id === p.id ? 18 : 7,
+                            height: 7,
+                            backgroundColor: activeEntry?.id === p.id ? TYPE_COLORS[p.type].color : "#1a1a1a30",
+                          }}
+                        />
+                      </button>
+                    ))}
+                    <span className="ml-auto text-[11px] font-bold text-[#1a1a1a]/50">
+                      Nº {activeEntry?.id} / {String(filtered.length).padStart(2, "0")}
+                    </span>
+                  </div>
+                )}
+
+                <AnimatePresence mode="wait">
+                  {activeEntry ? (
+                    <motion.div
+                      key={activeEntry.id}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.2 }}
+                      className="flex flex-col flex-1 gap-3"
+                    >
+                      <div className="relative rounded-lg overflow-hidden aspect-[16/9] border border-black/10">
+                        <img src={activeEntry.image} alt={activeEntry.title} className="w-full h-full object-cover" />
+                      </div>
+
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="font-display text-lg md:text-xl font-bold text-[#12222e] leading-tight">{activeEntry.fullTitle}</h3>
+                        <TypeBadge type={activeEntry.type} />
+                      </div>
+
+                      <p className="text-xs md:text-sm text-[#2a3a44]/80 leading-relaxed line-clamp-3">{activeEntry.description}</p>
+
+                      <div className="flex flex-wrap gap-1.5">
+                        {activeEntry.techStack.map(t => (
+                          <span key={t} className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#12222e]/70 border border-black/10 rounded-full bg-white/50">
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div className="mt-auto flex items-center gap-2 pt-2">
+                        <a
+                          href={activeEntry.github}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="p-2 rounded-full border border-black/15 hover:border-primary text-[#12222e]/60 hover:text-primary transition-colors cursor-pointer bg-white/40"
+                          aria-label="GitHub repository"
+                        >
+                          <GitHubIcon className="w-4 h-4" />
+                        </a>
+                        <button
+                          onClick={() => setSelected(activeEntry)}
+                          className="poke-button px-4 py-2 text-xs font-display cursor-pointer flex items-center gap-1.5 ml-auto"
+                        >
+                          Full Details <ArrowUpRight className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="no-signal"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="flex-1 flex flex-col items-center justify-center gap-3 text-center"
+                    >
+                      <Search className="w-8 h-8 text-[#12222e]/30" />
+                      <p className="text-xs font-bold text-[#12222e]/50 tracking-wide">No signal</p>
+                      <p className="text-xs text-[#12222e]/50 max-w-[220px]">No projects match that combination of skills. Clear a filter to keep scanning.</p>
+                      <button onClick={clearSkills} className="poke-button px-5 py-2.5 font-display text-xs cursor-pointer">
+                        Clear filters
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="flex items-center justify-between mt-3 pt-2">
+                  <span className="w-3 h-3 rounded-full bg-red-500 border border-black/20" />
+                  <div className="flex flex-col gap-1">
+                    {[0, 1, 2].map(i => (
+                      <span key={i} className="w-9 h-0.5 rounded-full bg-black/10" />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Control row */}
+            <div className="relative flex items-end gap-3 md:gap-4">
+              <DexAButton onClick={() => activeEntry && setSelected(activeEntry)} />
+
+              <div className="flex flex-col gap-1.5 mb-1.5">
+                <span className="w-12 md:w-14 h-2.5 rounded-full" style={{ background: "linear-gradient(160deg,#8a2018,#5c140f)" }} />
+                <span className="w-12 md:w-14 h-2.5 rounded-full" style={{ background: "linear-gradient(160deg,#2a5f8a,#163c5c)" }} />
+              </div>
+
+              {/* Secondary screen: skill search */}
+              <div className="flex-1 rounded-lg p-1.5" style={{ background: "linear-gradient(160deg, #f0f0f2, #b9bcc2)" }}>
+                <div className="relative rounded bg-[#cfe7f5] px-2.5 py-2">
+                  <div className="flex items-center gap-1.5">
+                    <Search className="w-3 h-3 text-[#12222e]/50 shrink-0" />
+                    <input
+                      type="text"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      onFocus={() => setSearchFocused(true)}
+                      onBlur={() => setTimeout(() => setSearchFocused(false), 150)}
+                      placeholder="Search a skill..."
+                      className="w-full bg-transparent text-[11px] md:text-xs text-[#12222e] placeholder:text-[#12222e]/40 focus:outline-none min-w-0"
+                    />
+                  </div>
+
+                  <AnimatePresence>
+                    {searchFocused && query.trim() && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        className="absolute bottom-full left-0 right-0 mb-2 rounded-xl bg-[#171a1f] border border-white/10 p-1.5 z-30 overflow-hidden shadow-xl"
+                      >
+                        {suggestions.length === 0 ? (
+                          <p className="text-[11px] text-white/40 px-3 py-2">No skill matches &quot;{query}&quot;.</p>
+                        ) : (
+                          suggestions.map(s => {
+                            const meta = TYPE_COLORS[s.type];
+                            return (
+                              <button
+                                key={s.name}
+                                type="button"
+                                onClick={() => selectSuggestion(s.name)}
+                                className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left hover:bg-white/5 transition-colors cursor-pointer"
+                              >
+                                <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: meta.color }} />
+                                <span className="text-sm font-semibold text-white">{s.name}</span>
+                                <span className="ml-auto text-[11px] text-white/40 shrink-0">
+                                  → {s.matchCount} proj{s.matchCount > 1 ? "s" : ""}
+                                </span>
+                              </button>
+                            );
+                          })
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+
+              <DexPad onLeft={() => step(-1)} onRight={() => step(1)} onUp={clearSkills} />
+            </div>
+
+            {activeSkills.size > 0 && (
+              <div className="relative flex flex-wrap items-center gap-1.5 mt-4">
+                {Array.from(activeSkills).map(skill => (
+                  <button
+                    key={skill}
+                    type="button"
+                    onClick={() => toggleSkill(skill)}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/15 text-white cursor-pointer"
+                  >
+                    {skill}
+                    <X className="w-2.5 h-2.5" />
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  onClick={clearSkills}
+                  className="text-[10px] text-white/60 hover:text-white font-bold underline underline-offset-2 cursor-pointer"
+                >
+                  clear
+                </button>
+              </div>
             )}
-          </AnimatePresence>
-        </div>
+          </div>
+        </AnimatedSection>
       </div>
 
       {/* ── Detail Modal ── */}
@@ -601,31 +558,30 @@ export function ProjectsSection() {
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.95, y: 24, opacity: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="doodle-card w-full max-w-4xl max-h-[92vh] overflow-y-auto p-6 md:p-10 relative no-scrollbar bg-card-bg"
+              className="poke-card w-full max-w-4xl max-h-[92vh] overflow-y-auto p-6 md:p-10 relative no-scrollbar"
               onClick={e => e.stopPropagation()}
             >
-              <div className="absolute top-0 left-0 w-full h-1.5" style={{ background: selected.accent, opacity: 0.65, borderRadius: "inherit" }} />
+              <div className="flex items-center gap-3 absolute top-6 left-6">
+                <TypeBadge type={selected.type} />
+              </div>
 
               <button onClick={() => setSelected(null)}
-                className="absolute top-5 right-5 p-2 rounded-xl border border-foreground/20 hover:border-foreground bg-background text-foreground transition-all cursor-pointer z-10 doodle-effect">
+                className="absolute top-5 right-5 p-2 rounded-full border border-border hover:border-primary text-muted-foreground hover:text-primary transition-all cursor-pointer z-10">
                 <X className="w-4 h-4" />
               </button>
 
-              <div className="space-y-8">
-                {((selected as any).video || (selected as any).screenshots?.length) ? (
-                  <MediaGallery video={(selected as any).video} screenshots={(selected as any).screenshots} title={selected.title} />
+              <div className="space-y-8 mt-10">
+                {(selected.video || selected.screenshots?.length) ? (
+                  <MediaGallery video={selected.video} screenshots={selected.screenshots} title={selected.title} />
                 ) : (
-                  <div className="relative aspect-video rounded-xl overflow-hidden border border-foreground/20 bg-muted doodle-effect">
+                  <div className="relative aspect-video rounded-xl overflow-hidden border border-border">
                     <img src={selected.image} alt={selected.title} className="w-full h-full object-cover" />
                   </div>
                 )}
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                   <div className="lg:col-span-8 space-y-6">
-                    <div className="flex items-start gap-4">
-                      <span className="font-display text-5xl font-bold leading-none mt-1" style={{ color: selected.accent, opacity: 0.15 }}>{selected.id}</span>
-                      <h3 className="font-display text-3xl md:text-4xl font-bold text-foreground leading-tight">{selected.fullTitle}</h3>
-                    </div>
+                    <h3 className="font-display text-3xl md:text-4xl font-bold text-foreground leading-tight">{selected.fullTitle}</h3>
                     <div className="space-y-2">
                       <h5 className="text-xs uppercase tracking-[0.25em] text-primary font-bold font-display">Overview</h5>
                       <p className="text-muted-foreground leading-relaxed text-sm md:text-base">{selected.details.overview}</p>
@@ -634,34 +590,31 @@ export function ProjectsSection() {
                       <h5 className="text-xs uppercase tracking-[0.25em] text-primary font-bold font-display">Key Features</h5>
                       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {selected.details.features.map((f, i) => (
-                          <li key={i} className="flex gap-3 text-sm font-bold text-foreground/80 p-4 rounded-xl border border-foreground/15 bg-background doodle-effect font-display">
-                            <span className="text-foreground shrink-0">✓</span>{f}
+                          <li key={i} className="flex gap-3 text-sm font-medium text-foreground/80 p-4 rounded-xl border border-border bg-muted/50">
+                            <span className="text-primary shrink-0">✓</span>{f}
                           </li>
                         ))}
                       </ul>
                     </div>
                   </div>
 
-                  <div className="lg:col-span-4 space-y-6 lg:pl-8 lg:border-l border-foreground/10">
+                  <div className="lg:col-span-4 space-y-6 lg:pl-8 lg:border-l border-border">
                     <div>
-                      <span className="text-xs uppercase tracking-[0.25em] text-muted-foreground font-bold font-display block mb-3">Technologies</span>
+                      <span className="text-xs uppercase tracking-[0.25em] text-muted-foreground font-bold block mb-3 font-display">Technologies</span>
                       <div className="flex flex-wrap gap-2">
                         {selected.techStack.map(t => (
-                          <span key={t} className="px-3 py-1.5 text-xs font-bold font-display border border-foreground/20 bg-background rounded-full doodle-effect">{t}</span>
+                          <span key={t} className="px-3 py-1.5 text-xs font-bold border border-border bg-muted rounded-full">{t}</span>
                         ))}
                       </div>
                     </div>
-                    <div className="space-y-3 pt-6 border-t border-foreground/10">
-                      <span className="text-xs uppercase tracking-[0.25em] text-muted-foreground font-bold font-display block">Links</span>
+                    <div className="space-y-3 pt-6 border-t border-border">
+                      <span className="text-xs uppercase tracking-[0.25em] text-muted-foreground font-bold block font-display">Links</span>
                       {[
-                        {
-                          href: selected.github, label: "GitHub Repository",
-                          icon: <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
-                        },
+                        { href: selected.github, label: "GitHub Repository", icon: <GitHubIcon className="w-4 h-4 shrink-0" /> },
                         { href: selected.live, label: "Live Demo", icon: <Globe className="w-4 h-4 shrink-0" /> },
                       ].map(({ href, label, icon }) => (
                         <a key={label} href={href} target="_blank" rel="noreferrer"
-                          className="flex items-center gap-3 text-sm py-2.5 px-4 rounded-xl border border-foreground/15 hover:border-foreground bg-background hover:bg-foreground/5 text-muted-foreground hover:text-foreground transition-colors group/l doodle-effect">
+                          className="flex items-center gap-3 text-sm py-2.5 px-4 rounded-xl border border-border hover:border-primary bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors group/l">
                           {icon}
                           <span className="font-display font-bold">{label}</span>
                           <ArrowUpRight className="w-3.5 h-3.5 ml-auto opacity-0 group-hover/l:opacity-100 transition-opacity" />

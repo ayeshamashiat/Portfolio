@@ -8,20 +8,25 @@ import { ContactSection } from "@/components/sections/ContactSection";
 import { MouseGlow } from "@/components/ui/MouseGlow";
 import { Preloader } from "@/components/ui/Preloader";
 import { Navbar } from "@/components/ui/Navbar";
+import { EasterEgg } from "@/components/ui/EasterEgg";
+import { SkillFilterProvider } from "@/components/SkillFilterProvider";
 
 export default function Home() {
   return (
-    <main className="min-h-screen relative selection:bg-white selection:text-black">
-      <Preloader />
-      <MouseGlow />
-      <Navbar />
-      <HeroSection />
-      <AboutSection />
-      <ProjectsSection />
-      <SkillsSection />
-      <ExperienceSection />
-      <AchievementsSection />
-      <ContactSection />
-    </main>
+    <SkillFilterProvider>
+      <main className="min-h-screen relative selection:bg-white selection:text-black">
+        <Preloader />
+        <MouseGlow />
+        <EasterEgg />
+        <Navbar />
+        <HeroSection />
+        <AboutSection />
+        <ProjectsSection />
+        <SkillsSection />
+        <ExperienceSection />
+        <AchievementsSection />
+        <ContactSection />
+      </main>
+    </SkillFilterProvider>
   );
 }

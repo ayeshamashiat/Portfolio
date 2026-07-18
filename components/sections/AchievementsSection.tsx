@@ -4,9 +4,22 @@ import { useState } from "react";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { DoodleMegaphone, DoodleTape, DoodleStar } from "@/components/ui/DoodleIcons";
+import { TrophyMedal } from "@/components/ui/Trophy";
+import { TYPE_COLORS, PokemonType } from "@/components/ui/TypeBadge";
 
-const ACHIEVEMENTS = [
+// Add new achievements here — each one gets a Hall of Fame trophy tinted by
+// its Pokemon type, no manual badge art needed.
+const ACHIEVEMENTS: {
+  id: string;
+  title: string;
+  issuer: string;
+  date: string;
+  team: string;
+  category: string;
+  type: PokemonType;
+  description: string;
+  certificate: string;
+}[] = [
   {
     id: "solvio",
     title: "SOLVIO Top 100",
@@ -14,135 +27,99 @@ const ACHIEVEMENTS = [
     date: "2025",
     team: "Team #336",
     category: "Hackathon",
+    type: "dragon",
     description:
       "Ranked in the Top 100 teams out of all participants in the SOLVIO competition — a prestigious national-level engineering and complex systems problem-solving challenge.",
     certificate: "/resources/Achievement/SOLVIO_Top100_Certificate_Team_336.png",
-    badge: "Top 100",
   },
 ];
 
 export function AchievementsSection() {
-  const [lightbox, setLightbox] = useState<string | null>(null);
+  const [selected, setSelected] = useState<(typeof ACHIEVEMENTS)[number] | null>(null);
 
   return (
     <section id="achievements" className="py-32 px-6 md:px-12 lg:px-24 relative overflow-hidden">
-      {/* Background stars */}
-      <motion.div
-        animate={{ y: [0, 8, 0], rotate: [0, 10, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-16 right-1/4 opacity-25 pointer-events-none"
-      >
-        <DoodleStar size={24} />
-      </motion.div>
-
-      <div className="max-w-7xl mx-auto">
-        <AnimatedSection className="flex items-center gap-4 mb-16">
-          <div>
-            <h2 className="text-xs uppercase tracking-[0.25em] text-foreground/70 mb-4 font-bold font-display">05 / Milestones</h2>
-            <h3 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground font-display flex items-center gap-3">
-              <span>Achievements</span>
-            </h3>
-            <p className="text-muted-foreground font-light text-sm md:text-base mt-3 max-w-xl leading-relaxed">
-              Recognition earned through competitions, teamwork, hackathons, and independent challenges.
-            </p>
-          </div>
-          <DoodleMegaphone className="text-foreground/70 animate-bounce ml-auto hidden sm:block" size={40} />
+      <div className="max-w-5xl mx-auto">
+        <AnimatedSection className="mb-14">
+          <h2 className="text-xs uppercase tracking-[0.25em] text-primary mb-4 font-bold font-display">05 / Hall of Fame</h2>
+          <h3 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground font-display">Hall of Fame</h3>
+          <p className="text-muted-foreground text-sm md:text-base mt-3 max-w-xl leading-relaxed">
+            Competitions and challenges, enshrined one trophy at a time.
+          </p>
         </AnimatedSection>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {ACHIEVEMENTS.map((item, index) => (
-            <AnimatedSection key={item.id} delay={index * 0.1}>
-              <div
-                className="doodle-card group relative overflow-hidden flex flex-col h-full pb-6 pt-2 bg-card-bg"
-              >
-                {/* Polaroid Tape decoration */}
-                <DoodleTape text="AWARDED" className="-top-1.5 left-1/2 -translate-x-1/2 z-10" />
-
-                {/* Certificate thumbnail */}
-                <div
-                  className="relative aspect-[4/3] overflow-hidden border-b-2 border-foreground/35 cursor-zoom-in bg-background m-4 rounded-sm border-2 border-foreground/15 shadow-sm"
-                  onClick={() => setLightbox(item.certificate)}
+        <div className="flex flex-wrap gap-6">
+          {ACHIEVEMENTS.map((achievement, index) => {
+            const color = TYPE_COLORS[achievement.type].color;
+            return (
+              <AnimatedSection key={achievement.id} delay={index * 0.1}>
+                <button
+                  type="button"
+                  onClick={() => setSelected(achievement)}
+                  className="poke-card poke-card-hover p-6 flex items-center gap-5 text-left cursor-pointer w-full sm:w-[340px]"
                 >
-                  <img
-                    src={item.certificate}
-                    alt={`${item.title} certificate`}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent" />
-                  
-                  {/* Zoom hint */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <span className="px-3.5 py-2 rounded-xl border-2 border-foreground bg-background text-xs font-bold tracking-wider text-foreground uppercase doodle-effect shadow-[2px_2px_0_0_currentColor]">
-                      View Certificate
-                    </span>
-                  </div>
-                  
-                  {/* Badge overlay */}
-                  <div
-                    className="absolute top-3 left-3 px-2.5 py-1 rounded text-[9px] font-bold uppercase tracking-widest border-2 border-foreground bg-background text-foreground doodle-effect shadow-[1.5px_1.5px_0_0_currentColor]"
+                  <motion.div
+                    animate={{ y: [0, -4, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    className="relative shrink-0"
                   >
-                    {item.badge}
+                    <TrophyMedal color={color} size={64} />
+                    <span className="absolute inset-0 rounded-full animate-ping opacity-20" style={{ backgroundColor: color, animationDuration: "3s" }} />
+                  </motion.div>
+                  <div className="min-w-0">
+                    <p className="font-display text-lg font-bold text-foreground leading-tight">{achievement.title}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{achievement.category} · {achievement.date}</p>
                   </div>
-                </div>
-
-                {/* Card body */}
-                <div className="px-6 flex flex-col gap-4 flex-1">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <h4 className="text-lg font-bold text-foreground leading-snug">{item.title}</h4>
-                      <span className="text-xs text-foreground/80 font-bold font-display underline decoration-wavy underline-offset-4">{item.issuer}</span>
-                    </div>
-                    <span
-                      className="shrink-0 text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded border-2 border-foreground bg-background text-foreground doodle-effect shadow-[1.5px_1.5px_0_0_currentColor] font-display"
-                    >
-                      {item.category}
-                    </span>
-                  </div>
-
-                  <p className="text-sm text-muted-foreground font-light leading-relaxed flex-1">
-                    {item.description}
-                  </p>
-
-                  <div className="flex items-center justify-between pt-4 border-t-2 border-dashed border-foreground/15 text-xs text-foreground/60 font-bold font-display">
-                    <span>{item.team}</span>
-                    <span>{item.date}</span>
-                  </div>
-                </div>
-              </div>
-            </AnimatedSection>
-          ))}
+                </button>
+              </AnimatedSection>
+            );
+          })}
         </div>
       </div>
 
-      {/* Lightbox */}
+      {/* Certificate + achievement detail modal */}
       <AnimatePresence>
-        {lightbox && (
+        {selected && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[120] flex items-center justify-center p-4 md:p-12 bg-black/80 backdrop-blur-sm cursor-zoom-out"
-            onClick={() => setLightbox(null)}
+            className="fixed inset-0 z-[120] flex items-center justify-center p-4 md:p-12 bg-black/80 backdrop-blur-sm"
+            onClick={() => setSelected(null)}
           >
             <motion.div
-              initial={{ scale: 0.92, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.92, opacity: 0 }}
+              initial={{ scale: 0.92, y: 16, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.92, y: 16, opacity: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="relative max-w-4xl w-full"
+              className="poke-card relative max-w-3xl w-full max-h-[92vh] overflow-y-auto no-scrollbar p-6 md:p-8"
               onClick={(e) => e.stopPropagation()}
             >
               <button
-                onClick={() => setLightbox(null)}
-                className="absolute -top-4 -right-4 z-10 p-2.5 rounded-xl border-2 border-foreground text-foreground bg-background hover:bg-muted transition-colors doodle-effect shadow-[2px_2px_0_0_currentColor] cursor-pointer"
+                onClick={() => setSelected(null)}
+                className="absolute top-5 right-5 z-10 p-2 rounded-full border border-border text-foreground bg-background hover:bg-muted transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
+
+              <div className="flex items-center gap-4 mb-6">
+                <TrophyMedal color={TYPE_COLORS[selected.type].color} size={48} />
+                <h4 className="text-xl font-bold text-foreground font-display">{selected.title}</h4>
+              </div>
+
               <img
-                src={lightbox}
-                alt="Certificate"
-                className="w-full rounded border-2 border-foreground shadow-lg doodle-effect"
+                src={selected.certificate}
+                alt={`${selected.title} certificate`}
+                className="w-full rounded-xl border border-border shadow-lg mb-6"
               />
+
+              <p className="text-sm text-muted-foreground leading-relaxed mb-4">{selected.description}</p>
+
+              <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-border text-xs">
+                <span className="px-2.5 py-1 rounded-full bg-muted text-foreground font-bold uppercase tracking-wide">{selected.category}</span>
+                <span className="text-muted-foreground font-semibold">{selected.issuer}</span>
+                <span className="ml-auto text-muted-foreground font-semibold">{selected.team} · {selected.date}</span>
+              </div>
             </motion.div>
           </motion.div>
         )}

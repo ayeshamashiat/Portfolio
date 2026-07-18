@@ -1,12 +1,10 @@
 "use client";
 
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
-import { DoodleHourglass, DoodleTape, DoodleStar } from "@/components/ui/DoodleIcons";
-import { motion } from "framer-motion";
+import { PokeBall } from "@/components/ui/PokeBall";
 
 const TIMELINE = [
   {
-    type: "education",
     role: "B.Sc. Software Engineering",
     company: "Islamic University of Technology (IUT)",
     date: "2023 - Present",
@@ -27,71 +25,50 @@ const TIMELINE = [
 export function ExperienceSection() {
   return (
     <section id="experience" className="py-32 px-6 md:px-12 lg:px-24 relative overflow-hidden">
-      {/* Floating Star */}
-      <motion.div
-        animate={{ y: [0, -10, 0] }}
-        transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-24 left-1/4 opacity-25 pointer-events-none"
-      >
-        <DoodleStar size={24} />
-      </motion.div>
-
       <div className="max-w-4xl mx-auto">
-        <AnimatedSection className="flex items-center gap-4 mb-16">
-          <div>
-            <h2 className="text-xs uppercase tracking-[0.25em] text-foreground/70 mb-4 font-bold font-display">04 / Timeline</h2>
-            <h3 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground font-display flex items-center gap-3">
-              <span>Education & Journey</span>
-            </h3>
-          </div>
-          <DoodleHourglass className="opacity-70 animate-pulse ml-auto" size={36} />
+        <AnimatedSection className="mb-16">
+          <h2 className="text-xs uppercase tracking-[0.25em] text-primary mb-4 font-bold font-display">04 / Trainer Journey</h2>
+          <h3 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground font-display">Education &amp; Journey</h3>
         </AnimatedSection>
 
-        <div className="relative border-l-[3px] border-foreground/30 pl-8 md:pl-16 ml-4 md:ml-6 space-y-16 doodle-effect">
+        <div className="relative border-l-2 border-dashed border-border pl-8 md:pl-16 ml-4 md:ml-6 space-y-16">
           {TIMELINE.map((item, index) => (
             <AnimatedSection key={index} delay={index * 0.1}>
               <div className="relative">
-                {/* Wobbly Hourglass Timeline Node */}
-                <div className="absolute -left-[49px] md:-left-[82px] top-1.5 z-10 flex items-center justify-center bg-background border-2 border-foreground rounded-full p-1.5 w-9 h-9 md:w-12 md:h-12 doodle-effect shadow-[2px_2px_0_0_currentColor]">
-                  <DoodleHourglass size={18} className="text-foreground" />
+                {/* Route node */}
+                <div className="absolute -left-[49px] md:-left-[82px] top-1.5 z-10 flex items-center justify-center bg-background border-2 border-primary rounded-full p-1.5 w-9 h-9 md:w-12 md:h-12 shadow-sm">
+                  <PokeBall size={20} />
                 </div>
+                <span className="absolute -left-[42px] md:-left-[70px] -top-5 font-pixel font-bold text-[11px] text-primary whitespace-nowrap">
+                  ROUTE {String(index + 1).padStart(2, "0")}
+                </span>
 
-                {/* Timeline Card */}
-                <div className="doodle-card p-6 md:p-8 relative group">
-                  <div className="absolute inset-0 hatch-bg opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none" />
-
-                  {/* Tape header decoration */}
-                  <DoodleTape text="CERTIFIED" className="-top-3 left-10 md:left-14" />
-
-                  {/* Date + badge row */}
-                  <div className="flex flex-wrap items-center gap-4 mb-4 mt-2">
+                <div className="poke-card poke-card-hover p-6 md:p-8 relative">
+                  <div className="flex flex-wrap items-center gap-4 mb-4">
                     <span className="text-sm font-bold tracking-wider text-foreground/80 uppercase font-display">
                       {item.date}
                     </span>
-                    <span
-                      className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded border-2 border-foreground bg-background text-foreground doodle-effect shadow-[1.5px_1.5px_0_0_currentColor]"
-                    >
+                    <span className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full bg-primary/10 text-primary">
                       {item.badge}
                     </span>
                   </div>
 
-                  <h4 className="text-2xl font-black text-foreground mb-1 leading-snug">{item.role}</h4>
-                  <span className="text-foreground/80 font-bold block mb-5 font-display underline decoration-wavy decoration-1 underline-offset-4">{item.company}</span>
-                  
-                  <p className="text-muted-foreground text-sm md:text-base leading-relaxed mb-6 font-light">
+                  <h4 className="text-2xl font-bold text-foreground mb-1 leading-snug font-display">{item.role}</h4>
+                  <span className="text-foreground/80 font-semibold block mb-5">{item.company}</span>
+
+                  <p className="text-muted-foreground text-sm md:text-base leading-relaxed mb-6">
                     {item.description}
                   </p>
 
-                  {/* Highlights grid */}
-                  <div className="border-t-2 border-dashed border-foreground/15 pt-5">
+                  <div className="border-t border-border pt-5">
                     <span className="text-xs uppercase tracking-[0.20em] text-muted-foreground block mb-3 font-bold font-display">Core Learnings:</span>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {item.highlights.map((point, i) => (
                         <li
                           key={i}
-                          className="flex items-center gap-2.5 text-sm font-bold text-foreground/90 font-display"
+                          className="flex items-center gap-2.5 text-sm font-semibold text-foreground/90"
                         >
-                          <span className="w-1.5 h-1.5 rounded-full bg-foreground shrink-0" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
                           <span>{point}</span>
                         </li>
                       ))}
@@ -101,6 +78,13 @@ export function ExperienceSection() {
               </div>
             </AnimatedSection>
           ))}
+
+          <div className="relative -mt-10">
+            <div className="absolute -left-[49px] md:-left-[82px] top-0 flex items-center justify-center w-9 h-9 md:w-12 md:h-12">
+              <span className="w-3 h-3 rounded-full bg-neon shadow-[0_0_10px_var(--color-neon)] animate-pulse" />
+            </div>
+            <span className="font-pixel font-bold text-xs text-neon tracking-wide">YOU ARE HERE</span>
+          </div>
         </div>
       </div>
     </section>

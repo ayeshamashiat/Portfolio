@@ -3,35 +3,35 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #FAFAF7;
-  --foreground: #1a1a1a;
-  --muted: #eaeaea;
-  --muted-foreground: #666666;
-  --border: #1a1a1a;
-  --primary: #1a1a1a;
-  --secondary: #1a1a1a;
-  --accent: #1a1a1a;
-  --card-bg: #FFFFFF;
-  --card-border: #1a1a1a;
-  
-  --doodle-border: 2px solid currentColor;
-  --doodle-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-  --paper-grid-line: rgba(26, 26, 26, 0.06);
+  --background: #fafafa;
+  --foreground: #14171a;
+  --muted: #f0f0f0;
+  --muted-foreground: #62676d;
+  --border: rgba(20, 23, 26, 0.1);
+  --primary: #e3350d;
+  --primary-foreground: #ffffff;
+  --secondary: #ffcb05;
+  --accent: #e3350d;
+  --card-bg: #ffffff;
+  --card-border: rgba(20, 23, 26, 0.08);
+
+  --dot-grid-line: rgba(20, 23, 26, 0.05);
 }
 
 .dark {
-  --background: #0f0f0f;
-  --foreground: #F0EFE8;
-  --muted: #222222;
-  --muted-foreground: #a0a09a;
-  --border: #F0EFE8;
-  --primary: #F0EFE8;
-  --secondary: #F0EFE8;
-  --accent: #F0EFE8;
-  --card-bg: #1a1a1a;
-  --card-border: #F0EFE8;
-  
-  --paper-grid-line: rgba(240, 239, 232, 0.06);
+  --background: #0b0e14;
+  --foreground: #f2f2f3;
+  --muted: #171b24;
+  --muted-foreground: #9198a3;
+  --border: rgba(242, 242, 243, 0.1);
+  --primary: #ff4433;
+  --primary-foreground: #ffffff;
+  --secondary: #ffcb05;
+  --accent: #ff4433;
+  --card-bg: #141925;
+  --card-border: rgba(242, 242, 243, 0.08);
+
+  --dot-grid-line: rgba(242, 242, 243, 0.06);
 }
 
 @theme {
@@ -41,65 +41,44 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
   --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
   --color-card-bg: var(--card-bg);
   --color-card-border: var(--card-border);
-  --font-sans: var(--font-body), var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-heading), cursive, var(--font-sans);
+  --font-display: var(--font-sans), sans-serif;
+  --font-mono: var(--font-sans), sans-serif;
+  --font-pixel: var(--font-sans), sans-serif;
+  --color-neon: #17f4c1;
 }
 
 body {
   background: var(--background);
-  background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, var(--paper-grid-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--paper-grid-line) 1px, transparent 1px);
+  background-size: 26px 26px;
+  background-image:
+    radial-gradient(var(--dot-grid-line) 1px, transparent 1px);
   color: var(--foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  font-family: var(--font-body);
   position: relative;
 }
 
-/* Red margin notebook line */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 45px;
-  width: 2px;
-  height: 100%;
-  background-color: rgba(239, 68, 68, 0.22);
-  pointer-events: none;
-  z-index: 49;
-}
-
-.dark body::before {
-  background-color: rgba(248, 113, 113, 0.18);
-}
-
-@media (max-w: 768px) {
-  body::before {
-    left: 20px;
-  }
-}
-
-/* Custom scrollbar matching sketch style */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+  width: 11px;
+  height: 11px;
 }
 ::-webkit-scrollbar-track {
   background: var(--background);
-  border-left: 2.5px solid var(--border);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--foreground);
-  border: 3.5px solid var(--background);
+  background: var(--primary);
+  border: 3px solid var(--background);
   border-radius: 99px;
-  filter: url(#doodle-border-filter);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground);
 }
 
 /* Headings auto use display font */
@@ -116,89 +95,79 @@ h1, h2, h3, h4, h5, h6, .font-display-auto {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-  
-  .bg-grid-pattern {
-    background-size: 40px 40px;
-    background-image: 
-      linear-gradient(to right, var(--paper-grid-line) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--paper-grid-line) 1px, transparent 1px);
-  }
-  
-  .hatch-bg {
-    background-image: repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 8px,
-      currentColor 8px,
-      currentColor 9.5px
-    );
-    opacity: 0.12;
-  }
-  
-  .hatch-bg-strong {
-    background-image: repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 5px,
-      currentColor 5px,
-      currentColor 6.5px
-    );
+
+  .bg-dot-pattern {
+    background-size: 26px 26px;
+    background-image: radial-gradient(var(--dot-grid-line) 1px, transparent 1px);
   }
 
-  .doodle-effect {
-    filter: url(#doodle-border-filter);
-  }
-  
-  .doodle-card {
+  .poke-card {
     background-color: var(--card-bg);
-    border: 2.5px solid var(--border);
-    border-radius: var(--doodle-radius);
-    filter: url(#doodle-border-filter);
-    box-shadow: 3.5px 4.5px 0 0 currentColor;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .doodle-card:hover {
-    transform: translate(-1.5px, -2.5px);
-    box-shadow: 6px 7px 0 0 currentColor;
-  }
-  
-  .doodle-button {
-    background-color: var(--card-bg);
-    border: 2.5px solid var(--border);
-    border-radius: var(--doodle-radius);
-    filter: url(#doodle-border-filter);
-    box-shadow: 3px 3px 0 0 currentColor;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .doodle-button:hover {
-    transform: translate(-1px, -1.5px);
-    box-shadow: 4.5px 4.5px 0 0 currentColor;
-  }
-  
-  .doodle-button:active {
-    transform: translate(1.5px, 1.5px);
-    box-shadow: 1px 1px 0 0 currentColor;
+    border: 1.5px solid var(--card-border);
+    border-radius: 1.25rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px -12px rgba(0, 0, 0, 0.12);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   }
 
-  .glass-card {
-    background-color: var(--card-bg);
-    border: 2.5px solid var(--border);
-    border-radius: var(--doodle-radius);
-    filter: url(#doodle-border-filter);
+  .poke-card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06), 0 16px 32px -12px rgba(0, 0, 0, 0.16);
+    border-color: var(--primary);
   }
-  
+
+  .poke-button {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border-radius: 999px;
+    font-weight: 700;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.15);
+  }
+
+  .poke-button:hover {
+    transform: translateY(-1.5px);
+    opacity: 0.94;
+  }
+
+  .poke-button:active {
+    transform: translateY(0.5px);
+    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.15);
+  }
+
+  .poke-button-ghost {
+    background-color: transparent;
+    color: var(--foreground);
+    border: 1.5px solid var(--border);
+    border-radius: 999px;
+    font-weight: 700;
+    transition: all 0.15s ease;
+  }
+
+  .poke-button-ghost:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-1.5px);
+  }
+
+  .poke-button-ghost:active {
+    transform: translateY(0.5px);
+  }
+
   .glass-nav {
-    background: var(--background);
-    border-bottom: 2.5px solid var(--border);
-    filter: url(#doodle-border-filter);
+    background: color-mix(in srgb, var(--card-bg) 88%, transparent);
+    border: 1.5px solid var(--card-border);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 12px 32px -16px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(12px);
   }
-  
-  .glow-text {
-    text-shadow: none;
+
+  .pokedex-shell {
+    background:
+      radial-gradient(130% 160% at 12% -10%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 42%),
+      linear-gradient(155deg, #ff6a4a 0%, var(--primary) 42%, #a01f08 100%);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+  }
+
+  .pokedex-screen {
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.55), inset 0 -1px 0 rgba(255, 255, 255, 0.04);
   }
 }

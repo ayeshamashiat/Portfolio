@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import { PokeBall } from "@/components/ui/PokeBall";
 
 export function Preloader() {
   const [loading, setLoading] = useState(true);
@@ -31,22 +32,23 @@ export function Preloader() {
           transition={{ duration: 0.8, ease: "easeInOut" }}
           className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background text-foreground"
         >
-          <div className="max-w-md w-full px-12">
-            <div className="flex justify-between items-end mb-3">
-              <span className="text-sm font-bold tracking-[0.2em] text-foreground uppercase">Ayesha Mashiat</span>
+          <div className="max-w-xs w-full px-12 flex flex-col items-center">
+            <PokeBall size={56} spinning />
+
+            <div className="mt-6 flex items-center justify-between w-full mb-2">
+              <span className="text-xs font-bold tracking-[0.15em] text-foreground uppercase font-display">Loading Pokédex</span>
               <span className="text-xs font-mono text-muted-foreground">{progress}%</span>
             </div>
-            <div className="w-full h-4 border-2 border-foreground bg-background rounded relative overflow-hidden doodle-effect">
-              <motion.div 
-                className="absolute top-0 left-0 h-full bg-foreground"
+            <div className="w-full h-2.5 rounded-full bg-muted relative overflow-hidden">
+              <motion.div
+                className="absolute top-0 left-0 h-full rounded-full bg-primary"
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
               />
             </div>
-            <div className="mt-3 flex justify-between text-[10px] text-muted-foreground tracking-[0.15em] uppercase font-normal">
-              <span>Systems Engineering</span>
-              <span>Intelligent Design</span>
-            </div>
+            <p className="mt-4 text-[11px] text-muted-foreground tracking-[0.1em] uppercase font-mono">
+              Ayesha Mashiat — Backend Developer
+            </p>
           </div>
         </motion.div>
       )}

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { useTheme } from "next-themes";
-import { DoodleLightBulb } from "@/components/ui/DoodleIcons";
+import { PokeBall } from "@/components/ui/PokeBall";
 
 const NAV_ITEMS = [
   { name: "About", href: "#about" },
@@ -43,39 +43,43 @@ export function Navbar() {
       }`}
     >
       <div className="max-w-6xl mx-auto px-4">
-        <div className="relative flex items-center justify-between px-6 py-2.5 doodle-card shadow-sm transition-all">
-          <a href="#" className="relative z-10 text-xl font-bold tracking-wide text-foreground hover:opacity-80 transition-opacity font-display">
-            Ayesha <span className="font-semibold text-primary underline decoration-wavy">Mashiat</span>
+        <div className="relative flex items-center justify-between px-5 py-2.5 rounded-full glass-nav">
+          <a href="#" className="relative z-10 flex items-center gap-2.5 text-xl font-bold tracking-tight text-foreground hover:opacity-80 transition-opacity font-display">
+            <PokeBall size={26} />
+            Ayesha <span className="text-primary">Mashiat</span>
           </a>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-1">
             {NAV_ITEMS.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="text-base font-bold text-muted-foreground hover:text-foreground uppercase tracking-wider transition-all duration-200 font-display hover:underline hover:decoration-wavy hover:underline-offset-4 hover:decoration-2"
+                className="group relative px-3.5 py-2 rounded-full text-xs uppercase tracking-wider font-bold text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-all duration-200 font-display flex items-center"
               >
+                <span className="text-primary opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 w-0 group-hover:w-3 overflow-hidden">
+                  ▸
+                </span>
                 {item.name}
               </a>
             ))}
           </nav>
 
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3">
             {mounted && (
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="relative z-10 p-2 text-muted-foreground hover:text-foreground transition-all rounded-xl border-2 border-foreground/30 hover:border-foreground bg-background doodle-effect cursor-pointer"
+                className="relative z-10 p-1.5 rounded-full border border-border hover:border-primary transition-all cursor-pointer"
                 aria-label="Toggle theme"
               >
-                <DoodleLightBulb size={15} className={theme === "light" ? "fill-foreground text-foreground" : "text-muted-foreground"} />
+                <PokeBall size={20} spinning={false} />
               </button>
             )}
             <a
               href="#contact"
-              className="doodle-button inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-foreground hover:scale-102 active:scale-98 transition-all duration-200 font-display"
+              className="poke-button inline-flex items-center gap-1.5 px-4 py-2 text-xs uppercase tracking-wider cursor-pointer font-display"
             >
-              <span>Let's talk</span>
+              <span>Let&apos;s talk</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
           </div>
@@ -85,10 +89,10 @@ export function Navbar() {
             {mounted && (
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="p-1.5 text-muted-foreground hover:text-foreground transition-all rounded-xl border-2 border-foreground/30 bg-background doodle-effect cursor-pointer"
+                className="p-1 rounded-full border border-border cursor-pointer"
                 aria-label="Toggle theme"
               >
-                <DoodleLightBulb size={14} className={theme === "light" ? "fill-foreground text-foreground" : "text-muted-foreground"} />
+                <PokeBall size={18} />
               </button>
             )}
             <button
@@ -109,7 +113,7 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="absolute top-full left-0 right-0 mx-4 mt-2 p-6 doodle-card shadow-lg md:hidden"
+            className="absolute top-full left-0 right-0 mx-4 mt-2 p-6 rounded-3xl glass-nav md:hidden"
           >
             <nav className="flex flex-col gap-6">
               {NAV_ITEMS.map((item) => (
@@ -117,16 +121,17 @@ export function Navbar() {
                   key={item.name}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className="text-lg font-bold text-muted-foreground hover:text-foreground uppercase tracking-wider transition-colors font-display"
+                  className="group flex items-center gap-2 text-lg font-bold text-muted-foreground hover:text-foreground transition-colors font-display"
                 >
+                  <span className="text-primary opacity-0 group-hover:opacity-100 transition-opacity">▸</span>
                   {item.name}
                 </a>
               ))}
-              <div className="pt-4 border-t border-foreground/10">
+              <div className="pt-4 border-t border-border">
                 <a
                   href="#contact"
                   onClick={() => setIsOpen(false)}
-                  className="inline-flex items-center gap-2 text-lg font-bold uppercase tracking-wider text-foreground hover:underline transition-colors font-display"
+                  className="inline-flex items-center gap-2 text-lg font-bold text-primary transition-colors font-display"
                 >
                   <span>Get in Touch</span>
                   <ArrowUpRight className="w-4 h-4" />
